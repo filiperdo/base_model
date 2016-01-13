@@ -1,0 +1,38 @@
+@CHARSET "ISO-8859-1";
+
+.teste{
+	border:1px solid #f00;
+}
+
+.btn-cadastro{
+	float:right;
+	margin-top:-65px
+}
+
+.lista-equip-item{
+	float:left;
+	border:1px solid #ccc;
+	width:80px;
+	height:80px;
+	margin:0 5px 5px 0;
+}
+
+.boneco-avatar-fixo{
+	position: relative;
+}
+.cabelo-fixo, .olhos-fixo, .boca-fixo, .corpo-fixo, .blusa-fixo, .calca-fixo, .bota-fixo, .mochila-alca-fixo, .mochila-base-fixo, .placa-professor{
+	position: absolute;
+}
+
+.placa-professor{ z-index: 12; }
+.mochila-alca-fixo { z-index: 9; }
+
+.cabelo-fixo{ z-index: 11; }
+.olhos-fixo { z-index: 10; }
+.boca-fixo  { z-index: 10; }
+.corpo-fixo { z-index: 9; }
+.blusa-fixo { z-index: 8; }
+.bota-fixo  { z-index: 2; }
+.calca-fixo { z-index: 1; }
+
+.mochila-base-fixo { z-index: 0; }
