@@ -1,46 +1,5 @@
 <?php Session::init(); ?>
-<?php 
-
-if (Session::get('loggedIn') == false)
-{
-	$menu = array(
-		'index'			=> "Dashboard",
-		'help'			=> "Escolas",
-	);
-	
-	$icones = array(
-		'index' 	=> 'glyphicon glyphicon-globe',
-		'help'		=> "glyphicon glyphicon-home",
-	);
-}
-else if( Session::get('loggedIn') == true )
-{
-	$menu = array(
-		'dashboard'			=> "Dashboard",
-		'note'				=> "Notes",
-		'user'				=> "Users",
-	);
-	
-	$icones = array(
-		'dashboard' 		=> 'glyphicon glyphicon-globe',
-		'note'				=> "glyphicon glyphicon-home",
-		'user'				=> "glyphicon glyphicon-scissors",
-	);
-}
-
-function compararPaginas( $pagina1, $pagina2 )
-{
-	$valor1 = explode("-", $pagina1);
-	$valor2 = explode("-", $pagina2);
-
-	if( $valor1[0] == $valor2[0] )
-		return true;
-	else
-		return false;
-}
-
-?>    
-    
+<?php include_once 'menu.php';?>    
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,13 +16,14 @@ function compararPaginas( $pagina1, $pagina2 )
 
     <!-- jQuery -->
     <script src="<?php echo URL; ?>public/js/jquery.min.js"></script>
+    <script src="<?php echo URL; ?>public/js/angular.min.js"></script>
     
     <?php 
     if (isset($this->js)) 
     {
         foreach ($this->js as $js)
         {
-            echo '<script type="text/javascript" src="'.URL.'views/'.$js.'"></script>';
+            echo '<script type="text/javascript" src="'.URL.'public/js/'.$js.'"></script>';
         }
     }
     ?>
@@ -106,13 +66,13 @@ function compararPaginas( $pagina1, $pagina2 )
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">Nome</a>
+                <a class="navbar-brand" href="index.php">Nome do sistema</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
                 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo 'nome'; ?> <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo 'Nome do usuario'; ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="#"><i class="fa fa-fw fa-user"></i> Editar perfil</a>
@@ -131,17 +91,13 @@ function compararPaginas( $pagina1, $pagina2 )
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                	
 	                <?php foreach( $menu as $key => $item ) { ?>
-	        
-			        <li <?php if( compararPaginas( $this->title, $key ) ) { echo ' class="active"'; }?>>
-			        	<a href="<?php echo URL . $key; ?>">
-			        		<i class="<?php echo $icones[$key]?>"></i> <?php echo $item; ?> 
-			        	</a>
-			        </li>
-			        
+				        <li>
+				        	<a href="<?php echo URL . $key; ?>">
+				        		<i class="<?php echo $item['icon']?>"></i> <?php echo $item['label']; ?> 
+				        	</a>
+				        </li>
 			        <?php } ?>
-                
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

@@ -23,10 +23,10 @@ class Mvc
     
     public function __construct()
     {
-    	$this->host = "localhost";
+    	$this->host = "host";
         $this->user = "root";
         $this->password = "";
-        $this->dbname = "dbname";
+        $this->dbname = "db_name";
         
         try{
         	$this->pdo = new PDO('mysql:host='.$this->host.';dbname='.$this->dbname, $this->user, $this->password);
@@ -36,10 +36,10 @@ class Mvc
         	echo "Erro!: " . $e->getMessage();
         }
         
-        $this->pathRoot = '_files/mvc';
+        $this->pathRoot = '';
         
-        if( !is_dir( $this->pathRoot ) )
-            mkdir( $this->pathRoot, 0777);
+        //if( !is_dir( $this->pathRoot ) )
+            //mkdir( $this->pathRoot, 0777);
         
         $sql = 'show tables from ' . $this->dbname;
 
@@ -47,6 +47,8 @@ class Mvc
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
         //var_dump( $result );
+        
+        //$this->createMenu( $result );
         
         $this->createModel( $result );
         
@@ -57,6 +59,34 @@ class Mvc
     	$this->createViews( $result );
     	
     }	
+    
+    /**
+     * Cria o menu
+     * @param unknown $result
+     */
+    private function createMenu( $result )
+    {
+    	// Configura o diretorio e o nome do arquivo
+    	// --------------------
+    	$path = $this->pathRoot . 'views/';
+    	$fileName = 'menu.php';
+    	
+    	$string  = '<?php' . "\n\n";
+    	$string .= '$menu = array(';
+    	
+    	foreach ( $result as $rowTabela )
+    	{
+    		$tableName = $rowTabela['Tables_in_'.$this->dbname];    		
+    		
+			$string .= "\n\t" . '"'. strtolower( $tableName ) .'"	=> array("label" => "'. ucfirst( $tableName ) .'", "icon" => "glyphicon glyphicon-globe"),';
+    		
+    	}
+    	
+    	$string .= $string .= "\n" .');';
+    	
+    	$this->createFile( $path, $fileName, $string );
+    	
+    }
     
     /**
      * Cria o diretorio e o arquivo
@@ -98,35 +128,41 @@ class Mvc
 
             // Configura o diretorio e o nome do arquivo
             // --------------------
-            $path = $this->pathRoot . '/views/ ' . $tableName . '/';
+            $path = $this->pathRoot . 'views/' . $tableName . '/';
             $fileName = 'index.php';
             
             $string  = '';
             $string .= '<!-- Page Heading -->';
             $string .= "\n" . '<div class="row">';
-            $string .= "\n" . '<div class="col-lg-12">';
-            $string .= "\n" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
-            $string .= "\n" . '<div class="row">';
-            $string .= "\n" . '<div class="col-lg-6 col-md-6">';
-            $string .= "\n" . '<ol class="breadcrumb">';
-            $string .= "\n" . '<li><a href="index.php">Home</a></li>';
-            $string .= "\n" . '<li class="active"><?php echo $this->title; ?></li>';
-            $string .= "\n" . '</ol></div>';
-            $string .= "\n" . '<div class="col-lg-4 col-md-3">';
-            $string .= "\n" . '<div class="form-group input-group">';
-            $string .= "\n" . '<input type="text" class="form-control" id="busca">';
-            $string .= "\n" . '<span class="input-group-btn">';
-            $string .= "\n" . '<button class="btn btn-default" type="button">';
-            $string .= "\n" . '<i class="glyphicon glyphicon-search"></i>';
-            $string .= "\n" . '</button></span></div></div>';
-            $string .= "\n" . '<div class="col-lg-2 col-md-2">';
-            $string .= "\n" . '<a href="<?php echo URL;?>'.$tableName.'/form" class="btn btn-success">Cadastrar <?php echo $this->title; ?></a>';
-            $string .= "\n</div>\n</div>\n</div>\n</div>";
+            $string .= "\n\t" . '<div class="col-lg-12">';
+            $string .= "\n\t\t" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
+            $string .= "\n\t\t" . '<div class="row">';
+            $string .= "\n\t\t\t" . '<div class="col-lg-6 col-md-6">';
+            $string .= "\n\t\t\t\t" . '<ol class="breadcrumb">';
+            $string .= "\n\t\t\t\t\t" . '<li><a href="index.php">Home</a></li>';
+            $string .= "\n\t\t\t\t\t" . '<li class="active"><a href="<?php echo URL;?>' . $tableName . '"><?php echo $this->title; ?></a></li>';
+            $string .= "\n\t\t\t\t" . '</ol>';
+            $string .= "\n\t\t\t" . '</div>';
+            $string .= "\n\t\t\t" . '<div class="col-lg-4 col-md-3">';
+            $string .= "\n\t\t\t" . '<form name="form-search" action="<?php echo URL;?>' . $tableName . '" method="post">';
+            $string .= "\n\t\t\t\t" . '<div class="form-group input-group">';
+            $string .= "\n\t\t\t\t\t" . '<input type="text" class="form-control" required="required" name="like" id="busca">';
+            $string .= "\n\t\t\t\t\t" . '<span class="input-group-btn">';
+            $string .= "\n\t\t\t\t\t\t" . '<button class="btn btn-default" type="submit">';
+            $string .= "\n\t\t\t\t\t\t\t\t" . '<i class="glyphicon glyphicon-search"></i>';
+            $string .= "\n\t\t\t\t\t\t" . '</button>';
+            $string .= "\n\t\t\t\t\t" . '</span>';
+            $string .= "\n\t\t\t\t" . '</div>';
+            $string .= "\n\t\t\t\t" . '</form>';
+            $string .= "\n\t\t\t" . '</div>'; 
+            $string .= "\n\t\t\t" . '<div class="col-lg-2 col-md-2">';
+            $string .= "\n\t\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form" class="btn btn-success">Cadastrar <?php echo $this->title; ?></a>';
+            $string .= "\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>";
             $string .= "\n" . '<!-- /.row -->';
 
 			$string .= "\n\n" . '<?php if (isset($_GET["st"])) { $objAlert = new Alerta($_GET["st"]); } ?>' . "\n\n";
 			
-			$string .= '<table class="table-striped sortable">'."\n";
+			$string .= '<table class="table table-striped sortable table-condensed">'."\n";
 			$string .= "\t" . '<thead>'."\n";
 			$string .= "\t" . '<tr>'."\n";
 			
@@ -140,14 +176,14 @@ class Mvc
 		    $string .= "\t" . '</thead>'."\n";
 		    $string .= "\t" . '<tbody>'."\n";
 		    
-			$string .= "\t" . '<?php foreach( $this->listar'. ucfirst( $tableName ) .'( $objPaginacao ) as $'.strtolower( $tableName ).' ) { ?>'."\n";
+			$string .= "\t" . '<?php foreach( $this->listar'. ucfirst( $tableName ) .' as $'.strtolower( $tableName ).' ) { ?>'."\n";
 			$string .= "\t" . '<tr>' . "\n " ;
 			
         	foreach( $colunas as $nome )
             {
             	$string .= "\t\t" . '<td><?php echo $'.strtolower( $tableName ).'->get'.ucfirst($nome).'(); ?></td>'."\n";
             } 
-			        
+			
 			$string .= "\t\t" . '<td align="right">'."\n";
 			$string .= "\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form/<?php echo $'.strtolower( $tableName ).'->getId_'.strtolower( $tableName ).'();?>" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>'."\n";
 			$string .= "\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/delete/<?php echo $'.strtolower( $tableName ).'->getId_'.strtolower( $tableName ).'();?>" class="delete btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>'."\n";
@@ -157,13 +193,12 @@ class Mvc
 			$string .= "\t" . '</tbody>' . "\n";
 			$string .= '</table>'."\n";
 			
-			$string .= '</div><!-- .row -->'."\n";
 			
 			$string .= "\n\n" . '<script>';
 			$string .= "\n" . '$(function() {';
 			$string .= "\n\t" . '$(".delete").click(function(e) {';
-			$string .= "\n\t" . 'var c = confirm("Deseja realmente deletar este registro?");';
-			$string .= "\n\t" . 'if (c == false) return false;';
+			$string .= "\n\t\t" . 'var c = confirm("Deseja realmente deletar este registro?");';
+			$string .= "\n\t\t" . 'if (c == false) return false;';
 			$string .= "\n\t" . "}); \n });\n</script>";
 			
 			$this->createFile( $path, $fileName, $string );
@@ -192,54 +227,35 @@ class Mvc
 
             // Configura o diretorio e o nome do arquivo
             // --------------------
-            $path = $this->pathRoot . '/views/ ' . $tableName . '/';
+            $path = $this->pathRoot . 'views/' . $tableName . '/';
             $fileName = 'form.php';
             // --------------
             
-            $formHTML  = '<?php' . "\n\n";
-                        
-            // Instancia as classes de chaves estrangeiras
-            // ----------------
-            foreach( $colunas as $nome )
-            {
-            	$flags = substr( $nome, 0, 3 );
-            
-            	if ( $flags == 'id_' )
-            	{
-                    $formHTML .= "\n" . '$obj' . ucfirst( strtolower(substr($nome, 3)) ) . ' = new ' . ucfirst( strtolower(substr($nome, 3)) ) . '();';
-                }
-            }
-            
-            $formHTML .= "\n\n" . 'if( isset( $_GET["id'. ucfirst( $tableName ) .'"] ) )';
-            $formHTML .= "\n" . '{';
-            
-            $formHTML .= "\n\t" . '$obj'. ucfirst( $tableName ) .'->obter'. ucfirst( $tableName ) .'( $_GET["id'. ucfirst( $tableName ) .'"] );';
-            $formHTML .= "\n" . '}';
-            $formHTML .= "\n\n" . '?>';
-            
+            $formHTML  = '';
             
             $formHTML .= "\n" . '<!-- Page Heading -->';
             $formHTML .= "\n" . '<div class="row">';
             $formHTML .= "\n" . '<div class="col-lg-12">';
-            $formHTML .= "\n" . '<h1 class="page-header">Formulario <?php $this->title; ?></h1>';
+            $formHTML .= "\n" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
             $formHTML .= "\n" . '<ol class="breadcrumb">';
-            $formHTML .= "\n" . '<li><a href="index.php">Home</a></li>';
-            $formHTML .= "\n" . '<li><a href="index.php?p=escola-lista"><?php $this->title; ?></a></li>';
-            $formHTML .= "\n" . '<li class="active">Cadastrar escola</li>';
+            $formHTML .= "\n" . '<li><a href="<?php echo URL; ?>">Home</a></li>';
+            $formHTML .= "\n" . '<li><a href="<?php echo URL; ?>'. $tableName .'"><?php echo $this->title; ?></a></li>';
+            $formHTML .= "\n" . '<li class="active"><?php echo $this->title; ?></li>';
             $formHTML .= "\n" . '</ol>';
             $formHTML .= "\n" . '</div>';
             $formHTML .= "\n" . '</div>';
             $formHTML .= "\n" . '<!-- /.row -->';
             
-            $formHTML .= "\n" . '<form id="form1" name="form1" method="post" action="<?php echo URL;?>'.$tableName.'/create/">';
+            $formHTML .= "\n" . '<form id="form1" name="form1" method="post" action="<?php echo URL;?>'.$tableName.'/<?php echo $this->action;?>/">';
             
-            $formHTML .= "\n\n" . '<div class="container-fluid">';
-            $formHTML .= "\n\n" . '<div class="col-md-6 col-sm-6 col-lg-6">';
+            
             $formHTML .= "\n\n" . '<div class="row">';
+            $formHTML .= "\n\n" . '<div class="col-md-6 col-sm-6 col-lg-6">';
+            
             
             $formHTML .= "\n\n" . '<h2 class="sub-header"> <?php echo $this->title; ?> </h2>';
             
-            $formHTML .= "\n" . '<input type="hidden" name="id'. ucfirst( $tableName ) .'" value="<?=$obj'. ucfirst( $tableName ) .'->getId_'. $tableName .'()?>" />';
+            $formHTML .= "\n" . '<input type="hidden" name="id'. ucfirst( $tableName ) .'" value="<?=$this->obj->getId_'. $tableName .'()?>" />';
             
             // Inicia os atributos vazios
             // --------------
@@ -247,43 +263,20 @@ class Mvc
             {
             	$flags = substr( $nome, 0, 3 );
             
-            	if ( $flags == 'id_' )
-            	{
-                    $formHTML .= "\n\n" . '<div class="form-group">';
-                    $formHTML .= "\n\t" . '<label for="'. strtolower(substr($nome, 3)) .'" class="control-label col-xs-3">'. $nome .'</label>';
-                    $formHTML .= "\n\n" . '<div class="col-xs-8">';
-                    $formHTML .= "\n\t" . '<select name="'. strtolower(substr($nome, 3)) .'" id="'. strtolower(substr($nome, 3)) .'" class="form-control" required="required">';
-                    $formHTML .= "\n\t" . '<option value="" disabled="disabled" selected="selected">Selecione a '. strtolower(substr($nome, 3)) .'</option>';
-                    $formHTML .= "\n\t" . '<?php foreach( $obj'.ucfirst(substr($nome, 3)).'->listar'.ucfirst(substr($nome, 3)).'() as $'. strtolower(substr($nome, 3)) .' ) { ?>';
-                    $formHTML .= "\n\t\t" . '<option value="<?=$'. strtolower(substr($nome, 3)) .'->getId_'.substr($nome, 3).'()?>" <?php if( $'. strtolower(substr($nome, 3)) .'->getId_'.substr($nome, 3).'() == $obj'.ucfirst( $tableName ).'->get'.ucfirst($nome).'() ){ ?>selected="selected"<?php } ?>>';
-                    $formHTML .= "\n\t\t" . '<?php echo $'. strtolower(substr($nome, 3)) .'->getId_'.substr($nome, 3).'()?></option>';
-                    $formHTML .= "\n\t" . '<?php } ?>';
-                    $formHTML .= "\n\t" . '</select>';
-                    $formHTML .= "\n" . '</div>';
-                    $formHTML .= "\n" . '</div>';
-                }
-                else
-                {
-                    $formHTML .= "\n\n" . '<div class="form-group">';
-                    $formHTML .= "\n\t" . '<label class="control-label col-xs-3" for="'. $nome .'">'. ucfirst( $nome ) .'</label> ';
-                    $formHTML .= "\n\t" . '<div class="col-xs-8">';
-                    $formHTML .= "\n\t\t" . '<input type="text" name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required" value="<?=$obj'. ucfirst( $tableName ) .'->get'. ucfirst( $nome ) .'()?>" />';
-                    $formHTML .= "\n\t" . '</div>';
-                    $formHTML .= "\n" . '</div>';
-                }
+                $formHTML .= "\n\n" . '<div class="form-group">';
+                $formHTML .= "\n\t" . '<label for="'. $nome .'">'. ucfirst( $nome ) .'</label> ';
+                $formHTML .= "\n\t\t" . '<input type="text" name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required" value="<?=$this->obj->get'. ucfirst( $nome ) .'()?>" />';
+                $formHTML .= "\n" . '</div>';    
             }
             
             $formHTML .= "\n\n" . '<div class="form-group">';
-            $formHTML .= "\n\n" . '<div class="col-xs-offset-3 col-xs-9">';
-            $formHTML .= "\n\t" . '<a href="index.php?p='. $tableName .'-lista" class="btn btn-info">Cancelar</a>';
             $formHTML .= "\n\t" . '<input type="submit" name="salvar" id="salvar" value="Salvar" class="btn btn-success" />';
-            $formHTML .= "\n" . '</div>';
+            $formHTML .= "\n\t" . '<a href="<?php echo URL; ?>'. $tableName .'" class="btn btn-info">Cancelar</a>';
             $formHTML .= "\n" . '</div>';
             
-            $formHTML .= "\n\n" . "\n</div>\n</div>\n</div>\n\n</form>";
+            $formHTML .= "\n\n" . "\n</div>\n</div>\n\n</form>";
 
             $this->createFile( $path, $fileName, $formHTML );
-            
         }
     }
     
@@ -309,7 +302,7 @@ class Mvc
 
             // Configura o diretorio e o nome do arquivo
             // --------------------
-            $path = $this->pathRoot . '/controllers/';
+            $path = $this->pathRoot . 'controllers/';
             $fileName = $tableName . '.php';
             
             $string = "<?php ";
@@ -320,7 +313,7 @@ class Mvc
             // ---------------
             $string .= "\n\n\t".'public function __construct() {';
             $string .= "\n\t\t".'parent::__construct();';
-            $string .= "\n\t\t".'Auth::handleLogin();';
+            $string .= "\n\t\t".'//Auth::handleLogin();';
             $string .= "\n\t".'}';
             
             // Metodo index
@@ -342,18 +335,28 @@ class Mvc
             // ---------------
             $string .= "\n\n\t/** \n\t* Metodo editForm\n\t*/\n";
             
-            $string .= "\t".'public function editForm($id)';
+            $string .= "\t".'public function form( $id = NULL )';
             $string .= "\n\t".'{';
-            $string .= "\n\t\t".'$this->view->'.$tableName.' = $this->model->obter'.ucfirst($tableName).'( $id );';
             
-            $string .= "\n\n\t\t".'if ( empty( $this->view->'. $tableName .' ) ) {';
-            $string .= "\n\t\t\t".'die( "Valor invalido!" );';
-            $string .= "\n\t\t".'}';
+            $string .= "\n\t\t" . '$this->view->title = "Cadastrar '.ucfirst($tableName).'";';
+            $string .= "\n\t\t" . '$this->view->action = "create";';
+            $string .= "\n\t\t" . '$this->view->obj = $this->model;';
             
-            $string .= "\n\n\t\t".'$this->view->title = "Editar '. ucfirst($tableName) .'";';
+            $string .= "\n\n\t\t" . 'if( $id ) ';
+            $string .= "\n\t\t" . '{';
             
-            $string .= "\n\t\t".'$this->view->render( "header" );';
-            $string .= "\n\t\t".'$this->view->render( "'. $tableName .'/editForm" );';
+            $string .= "\n\t\t\t" . '$this->view->title = "Editar '.ucfirst($tableName).'";';
+            $string .= "\n\t\t\t" . '$this->view->action = "edit/".$id;';
+            $string .= "\n\t\t\t" . '$this->view->obj = $this->model->obter'.ucfirst($tableName).'( $id );';
+            
+            $string .= "\n\n\t\t\t".'if ( empty( $this->view->obj ) ) {';
+            $string .= "\n\t\t\t\t".'die( "Valor invalido!" );';
+            $string .= "\n\t\t\t".'}';
+            
+            $string .= "\n\t\t" . '}';
+            
+            $string .= "\n\n\t\t".'$this->view->render( "header" );';
+            $string .= "\n\t\t".'$this->view->render( "'. $tableName .'/form" );';
             $string .= "\n\t\t".'$this->view->render( "footer" );';
             $string .= "\n\t".'}';
             
@@ -371,10 +374,9 @@ class Mvc
             }
             
             $string .= "\n\t\t".');';
-            $string .= "\n\n\t\t".'$this->model->create( $data );';
             
-            $string .= "\n\t\t".'$msg = base64_encode( "OPERACAO_SUCESSO" );';
-            $string .= "\n\t\t".'header("location: " . URL . "'.$tableName.'?st=".$msg);';
+            $string .= "\n\n\t\t".'$this->model->create( $data ) ? $msg = base64_encode( "OPERACAO_SUCESSO" ) : $msg = base64_encode( "OPERACAO_ERRO" );';
+            $string .= "\n\n\t\t".'header("location: " . URL . "'.$tableName.'?st=".$msg);';
             
             $string .= "\n\t".'}';
             
@@ -393,9 +395,10 @@ class Mvc
 			}
             			
             $string .= "\n\t\t".');';
-            $string .= "\n\n\t\t".'$this->model->edit( $data );';
-            $string .= "\n\t\t".'$msg = base64_encode( "OPERACAO_SUCESSO" );';
-            $string .= "\n\t\t".'header("location: " . URL . "'.$tableName.'?st=".$msg);';
+            
+            $string .= "\n\n\t\t".'$this->model->edit( $data, $id ) ? $msg = base64_encode( "OPERACAO_SUCESSO" ) : $msg = base64_encode( "OPERACAO_ERRO" );';
+            $string .= "\n\n\t\t".'header("location: " . URL . "'.$tableName.'?st=".$msg);';
+            
             $string .= "\n\t".'}';
 			
             
@@ -405,9 +408,10 @@ class Mvc
             
             $string .= "\t".'public function delete( $id )';
             $string .= "\n\t".'{';
-            $string .= "\n\t\t".'$this->model->delete( $id );';
-            $string .= "\n\t\t".'$msg = base64_encode( "OPERACAO_SUCESSO" );';
-            $string .= "\n\t\t".'header("location: " . URL . "'.$tableName.'?st=".$msg);';
+            
+            $string .= "\n\t\t".'$this->model->delete( $id ) ? $msg = base64_encode( "OPERACAO_SUCESSO" ) : $msg = base64_encode( "OPERACAO_ERRO" );';
+            $string .= "\n\n\t\t".'header("location: " . URL . "'.$tableName.'?st=".$msg);';
+            
             $string .= "\n\t".'}';
 			    
 			$string .= "\n".'}'."\n";
@@ -439,7 +443,7 @@ class Mvc
     		// ************************************************
             // Configura o diretorio e o nome do arquivo
             // ************************************************
-            $path = $this->pathRoot . '/models/';
+            $path = $this->pathRoot . 'models/';
             $fileName = $nomeClasse . '_model.php';
             
             $string = "<?php \n";
@@ -558,14 +562,16 @@ class Mvc
             
             $string .= "\t" . 'public function create( $data )';
             $string .= "\n\t" .'{';
-            $string .= "\n\t" .'	$this->db->insert("'. $nomeClasse .'", array(';
+            $string .= "\n\t\t" . '$this->db->beginTransaction();';
             
-            foreach( $colunas as $nome )
-            {
-            	$string .= "\n\t\t\t" . "'{$nome}' \t\t=> " . '$data["' . $nome . '"],';
-            }
+            $string .= "\n\n\t\t" .'if( !$id = $this->db->insert( "'. $nomeClasse .'", $data ) ){';
+            $string .= "\n\t\t\t" .'$this->db->rollBack();';
+            $string .= "\n\t\t\t" .'return false;';
+            $string .= "\n\t\t" .'}';
             
-            $string .= "\n\t\t" .'));';
+            $string .= "\n\n\t\t" .'$this->db->commit();';
+            $string .= "\n\t\t" .'return true;';
+            
             $string .= "\n\t" .'}';
             
             
@@ -573,19 +579,19 @@ class Mvc
             // ---------------
             $string .= "\n\n\t/** \n\t* Metodo edit\n\t*/\n";
             
-            $string .= "\t" . 'public function edit( $data )';
+            $string .= "\t" . 'public function edit( $data, $id )';
             $string .= "\n\t" . '{';
-            $string .= "\n\t\t" . '$postData = array(';
             
-    		foreach( $colunas as $nome )
-            {
-            	$string .= "\n\t\t\t" . "'{$nome}' => " . '$data["' . $nome . '"],';
-            }
+            $string .= "\n\t\t" . '$this->db->beginTransaction();';
             
-            $string .= "\n\t\t" .');';
+            $string .= "\n\n\t\t" .'if( !$update = $this->db->update("' . $nomeClasse . '", $data, "id_' . $nomeClasse . ' = {$id} ") ){';
+            $string .= "\n\t\t\t" .'$this->db->rollBack();';
+            $string .= "\n\t\t\t" .'return false;';
+            $string .= "\n\t\t" .'}';
             
-            $string .= "\n\n\t\t" .'$this->db->update("' . $nomeClasse . '", $postData, "id_' . $nomeClasse . ' = ' . '{$data['."'id_" . $nomeClasse ."'" . ']} ");';
- 
+            $string .= "\n\n\t\t" .'$this->db->commit();';
+            $string .= "\n\t\t" .'return $update;';
+            
             $string .= "\n\t" .'}';
             
             
@@ -595,7 +601,14 @@ class Mvc
             
             $string .= "\t" . 'public function delete( $id )';
             $string .= "\n\t" . '{';
-            $string .= "\n\t" . '	$this->db->delete("'. $nomeClasse .'", "id_'. $nomeClasse .' = {$id} ");';
+            $string .= "\n\t\t" . '$this->db->beginTransaction();';
+            $string .= "\n\n\t" . '	if( !$delete = $this->db->delete("'. $nomeClasse .'", "id_'. $nomeClasse .' = {$id} ") ){ ';
+            $string .= "\n\t\t\t" .'$this->db->rollBack();';
+            $string .= "\n\t\t\t" .'return false;';
+            $string .= "\n\t\t" .'}';
+            
+            $string .= "\n\n\t\t" .'$this->db->commit();';
+            $string .= "\n\t\t" .'return $delete;';
             $string .= "\n\t" . '}';
             
             
@@ -604,41 +617,56 @@ class Mvc
             
             $string .= "\n\n\t/** \n\t* Metodo obter".ucfirst($nomeClasse)."\n\t*/\n";
             
-            $string .= "\tpublic function obter" . ucfirst($nomeClasse) . '( $id_' . $nomeClasse . " )\n\t{\n\t\t";
-            $string .= '$result = $this->db->obterRegistroPorId( "' . $nomeClasse . '", $id_' . $nomeClasse . ' );' . "\n";
-            $string .= "\t\t" . 'return $this->montarObjeto( $result->fetch_array() );' . "\n\t}";
+            $string .= "\tpublic function obter" . ucfirst($nomeClasse) . '( $id_' . $nomeClasse . " )\n\t{";
+            
+            $string .= "\n\t\t" . '$sql  = "select * ";';
+            $string .= "\n\t\t" . '$sql .= "from ' . $nomeClasse . ' ";';
+            $string .= "\n\t\t" . '$sql .= "where id_' . $nomeClasse . ' = :id ";';
+            
+            $string .= "\n\n\t\t" . '$result = $this->db->select( $sql, array("id" => $id_' . $nomeClasse . ') );';
+            
+            $string .= "\n\t\t" . 'return $this->montarObjeto( $result[0] );';
+            
+            $string .= "\n\t}";
             
             // Metodo listar
             // ---------------
             $string .= "\n\n\t/** \n\t* Metodo listar".ucfirst($nomeClasse)."\n\t*/\n";
             $string .= "\t";
-            $string .= 'public function listar' . ucfirst($nomeClasse) . '( Paginacao $objPaginacao = NULL )' . "\n\t{\n\t\t";
+            $string .= 'public function listar' . ucfirst($nomeClasse) . '()' . "\n\t{\n\t\t";
             $string .= '$sql  = "select * ";' . "\n\t\t";
             $string .= '$sql .= "from '. $nomeClasse .' ";' . "\n\n\t\t";
-            $string .= 'if ($objPaginacao)' . "\n\t\t{\n\t\t\t";
-            $string .= '$sql .= "limit " . $objPaginacao->getInicio() . "," . $objPaginacao->getResultPorPagina();' . "\n\t\t}";
-            $string .= "\n\n\t\t" . '$result = $this->db->executarSQL($sql);';
-            $string .= "\n\n\t\t" . 'if ( $result->num_rows > 0 )';
-            $string .= "\n\t\t\t" . 'return $this->montarLista($result);';
-            $string .= "\n\t\t" . 'else';
-            $string .= "\n\t\t\t" . 'return array();' . "\n\t}";
+            $string .= 'if ( isset( $_POST["like"] ) )' . "\n\t\t{\n\t\t\t";
+            
+            $string .= '$sql .= "where id_' . $nomeClasse . ' like :id "; // Configurar o like com o campo necessario da tabela ';
+            $string .= "\n\t\t\t" . '$result = $this->db->select( $sql, array("id" => "%{$_POST["like"]}%") );';
+            
+            $string .= "\n\t\t}\n\t\telse";
+            $string .= "\n\t\t\t" . '$result = $this->db->select( $sql );';
+            
+            $string .= "\n\n\t\t" . 'return $this->montarLista($result);';
+            
+            $string .= "\n\t}";
             
             // Metodo montarLista
             // ---------------
             $string .= "\n\n\t/** \n\t* Metodo montarLista\n\t*/\n";
             
             $string .= "\t" . 'private function montarLista( $result )' . "\n\t{";
-            $string .= "\n\t\t" . 'if( $result->num_rows > 0 )' . "\n\t\t{";
-            $string .= "\n\t\t\t" . 'while( $row = $result->fetch_array() )' . "\n\t\t\t{";
+            $string .= "\n\t\t" . '$objs = array();';
+            $string .= "\n\t\t" . 'if( !empty( $result ) )' . "\n\t\t{";
+            $string .= "\n\t\t\t" . 'foreach( $result as $row )' . "\n\t\t\t{";
             $string .= "\n\t\t\t\t" . '$obj = new self();';
             $string .= "\n\t\t\t\t" . '$obj->montarObjeto( $row );';
             $string .= "\n\t\t\t\t" . '$objs[] = $obj;';
             $string .= "\n\t\t\t\t" . '$obj = null;' . "\n\t\t\t}";
-            $string .= "\n\t\t\t" . 'return $objs;' . "\n\t\t}";
-            $string .= "\n\t\telse\n\t\t{";
-            $string .= "\n\t\t\treturn false;\n\t\t}\n\t}";
-
-
+            
+            
+            $string .= "\n\t\t}";
+            $string .= "\n\t\t" . 'return $objs;';
+            $string .= "\n\t}";
+			
+            
             // Método montarObjeto
             // ---------------
             $string .= "\n\n\t/** \n\t* Metodo montarObjeto\n\t*/\n";
@@ -666,7 +694,9 @@ class Mvc
                 }
                 
             }
-
+			
+            $string .= "\n\n\t\t" . 'return $this;';
+            
             $string .= "\n\t}";
 
             $string .= "\n}\n?>";

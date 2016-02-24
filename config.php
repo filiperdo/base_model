@@ -5,10 +5,10 @@ define('URL', 'http://localhost/sysmodel/');
 define('LIBS', 'libs/');
 
 define('DB_TYPE', 'mysql');
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'mvc');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'mysql.programapico.com.br');
+define('DB_NAME', 'programapico');
+define('DB_USER', 'programapico');
+define('DB_PASS', 'p1cO2015');
 
 // The sitewide hashkey, do not change this because its used for passwords!
 // This is for other hash keys... Not sure yet

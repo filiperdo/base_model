@@ -5,9 +5,11 @@ class Database extends PDO
     
     public function __construct($DB_TYPE, $DB_HOST, $DB_NAME, $DB_USER, $DB_PASS)
     {
+    	
         parent::__construct($DB_TYPE.':host='.$DB_HOST.';dbname='.$DB_NAME, $DB_USER, $DB_PASS);
         
         //parent::setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTIONS);
+        
     }
     
     /**
@@ -32,7 +34,7 @@ class Database extends PDO
     }
     
     /**
-     * insert
+     * insert retornando o id do ultimo registro
      * @param string $table A name of table to insert into
      * @param string $data An associative array
      */
@@ -50,6 +52,13 @@ class Database extends PDO
         }
         
         $sth->execute();
+        
+        // Seleciona o id do ultimo registro
+        $row = $this->select( "select max(id_" . $table . ") as uid from " . $table );
+        
+        // Retorna o id do ultimo registro
+        return $row[0]['uid'];
+		
     }
     
     /**
@@ -64,17 +73,25 @@ class Database extends PDO
         
         $fieldDetails = NULL;
         foreach($data as $key=> $value) {
-            $fieldDetails .= "`$key`=:$key,";
+            $fieldDetails .= "$key=:$key,";
         }
         $fieldDetails = rtrim($fieldDetails, ',');
         
+        //echo "UPDATE $table SET $fieldDetails WHERE $where<br/>";
+        
         $sth = $this->prepare("UPDATE $table SET $fieldDetails WHERE $where");
+        
+        //var_dump( $data );
+        //var_dump( $where );
         
         foreach ($data as $key => $value) {
             $sth->bindValue(":$key", $value);
         }
         
-        $sth->execute();
+        return $sth->execute();
+        
+        //var_dump( $result );
+        //exit();
     }
     
     /**
