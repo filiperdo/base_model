@@ -12,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?=(isset($this->title)) ? $this->title : 'MVC'; ?></title>
+    <title><?=(isset($this->title)) ? $this->title : SYSTEM_NAME; ?></title>
 
     <!-- jQuery -->
     <script src="<?php echo URL; ?>public/js/jquery.min.js"></script>
@@ -66,7 +66,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">Nome do sistema</a>
+                <a class="navbar-brand" href="index.php"><?php SYSTEM_NAME; ?></a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -75,15 +75,15 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo 'Nome do usuario'; ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Editar perfil</a>
+                            <a href="#"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;Editar perfil</a>
                         </li>
                         <!-- <li>
-                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                            <a href="#"><i class="fa fa-fw fa-envelope"></i>&nbsp;&nbsp;&nbsp;&nbsp;Inbox</a>
                         </li>-->
                         
                         <li class="divider"></li>
                         <li>
-                            <a href="../controller/login-controle.php?logout=1"><i class="fa fa-fw fa-power-off"></i> Sair</a>
+                            <a href="../controller/login-controle.php?logout=1"><i class="glyphicon glyphicon-off"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sair</a>
                         </li>
                     </ul>
                 </li>

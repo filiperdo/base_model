@@ -10,6 +10,9 @@ define('DB_NAME', 'programapico');
 define('DB_USER', 'programapico');
 define('DB_PASS', 'p1cO2015');
 
+//Nome do sistema
+define('SYSTEM_NAME','SYSMODEL');
+
 // The sitewide hashkey, do not change this because its used for passwords!
 // This is for other hash keys... Not sure yet
 define('HASH_GENERAL_KEY', 'MixitUp200');
