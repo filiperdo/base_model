@@ -72,10 +72,10 @@
             <ul class="nav navbar-right top-nav">
                 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo 'Nome do usuario'; ?> <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo Session::get('user_name'); ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;Editar perfil</a>
+                            <a href="<?php echo URL?>login/logout"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;Editar perfil</a>
                         </li>
                         <!-- <li>
                             <a href="#"><i class="fa fa-fw fa-envelope"></i>&nbsp;&nbsp;&nbsp;&nbsp;Inbox</a>

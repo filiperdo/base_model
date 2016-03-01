@@ -23,10 +23,10 @@ class Mvc
     
     public function __construct()
     {
-    	$this->host = "host";
+    	$this->host = "localhost";
         $this->user = "root";
         $this->password = "";
-        $this->dbname = "db_name";
+        $this->dbname = "sysmodel";
         
         try{
         	$this->pdo = new PDO('mysql:host='.$this->host.';dbname='.$this->dbname, $this->user, $this->password);
@@ -36,10 +36,10 @@ class Mvc
         	echo "Erro!: " . $e->getMessage();
         }
         
-        $this->pathRoot = '';
+        $this->pathRoot = '_files/_mvc/';
         
-        //if( !is_dir( $this->pathRoot ) )
-            //mkdir( $this->pathRoot, 0777);
+        if( !is_dir( $this->pathRoot ) )
+            mkdir( $this->pathRoot, 0777);
         
         $sql = 'show tables from ' . $this->dbname;
 
@@ -48,7 +48,7 @@ class Mvc
         
         //var_dump( $result );
         
-        //$this->createMenu( $result );
+        $this->createMenu( $result );
         
         $this->createModel( $result );
         
@@ -248,12 +248,8 @@ class Mvc
             
             $formHTML .= "\n" . '<form id="form1" name="form1" method="post" action="<?php echo URL;?>'.$tableName.'/<?php echo $this->action;?>/">';
             
-            
             $formHTML .= "\n\n" . '<div class="row">';
             $formHTML .= "\n\n" . '<div class="col-md-6 col-sm-6 col-lg-6">';
-            
-            
-            $formHTML .= "\n\n" . '<h2 class="sub-header"> <?php echo $this->title; ?> </h2>';
             
             $formHTML .= "\n" . '<input type="hidden" name="id'. ucfirst( $tableName ) .'" value="<?=$this->obj->getId_'. $tableName .'()?>" />';
             

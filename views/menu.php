@@ -1,16 +1,9 @@
-<?php
+<?php 
 
 $menu = array(
-	"acordo"	=> array("label" => "Acordo", "icon" => "glyphicon glyphicon-globe"),
-	"cargo"	=> array("label" => "Cargo", "icon" => "glyphicon glyphicon-globe"),
-	"demanda"	=> array("label" => "Demanda", "icon" => "glyphicon glyphicon-globe"),
-	"empresa"	=> array("label" => "Empresa", "icon" => "glyphicon glyphicon-globe"),
-	"endereco"	=> array("label" => "Endereco", "icon" => "glyphicon glyphicon-globe"),
-	"etapa"	=> array("label" => "Etapa", "icon" => "glyphicon glyphicon-globe"),
-	"fatura"	=> array("label" => "Fatura", "icon" => "glyphicon glyphicon-globe"),
-	"login"	=> array("label" => "Login", "icon" => "glyphicon glyphicon-globe"),
-	
-	"pagamento"	=> array("label" => "Pagamento", "icon" => "glyphicon glyphicon-globe"),
-	"projeto"	=> array("label" => "Projeto", "icon" => "glyphicon glyphicon-globe"),
-	
+	"index"	=> array("label" => "Home", "icon" => "glyphicon glyphicon-globe"),
+	"post"	=> array("label" => "Post", "icon" => "glyphicon glyphicon-globe"),
+	"typepost"	=> array("label" => "Typepost", "icon" => "glyphicon glyphicon-globe"),
+	"typeuser"	=> array("label" => "Typeuser", "icon" => "glyphicon glyphicon-globe"),
+	"user"	=> array("label" => "User", "icon" => "glyphicon glyphicon-globe"),
 );

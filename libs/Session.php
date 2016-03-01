@@ -21,7 +21,9 @@ class Session
     
     public static function destroy()
     {
-        //unset($_SESSION);
+        unset($_SESSION['loggedIn']);
+        unset($_SESSION['user_name']);
+        unset($_SESSION['userid']);
         session_destroy();
     }
     

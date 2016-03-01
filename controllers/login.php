@@ -20,5 +20,10 @@ class Login extends Controller {
         $this->model->run();
     }
     
+    function logout()
+    {
+    	$this->model->logout();
+    }
+    
 
 }

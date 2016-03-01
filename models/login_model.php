@@ -9,30 +9,39 @@ class Login_Model extends Model
 
     public function run()
     {
-        $sth = $this->db->prepare("SELECT userid, role FROM user WHERE 
-                login = :login AND password = :password");
+    	$sql  = 'SELECT * ';
+    	$sql .= 'FROM user ';
+    	$sql .= 'WHERE login = :login ';
+    	$sql .= 'AND password = :password ';
+    	
+        $sth = $this->db->prepare( $sql );
         $sth->execute(array(
             ':login' 	=> $_POST['login'],
-            ':password' => Hash::create('sha256', $_POST['password'], HASH_PASSWORD_KEY)
+            ':password' => $_POST['password'] // Hash::create('sha256', $_POST['password'], HASH_PASSWORD_KEY)
         ));
         
         $data = $sth->fetch();
         
-        $count = $sth->rowCount();
-        if ( $count > 0 )
+        if ( $sth->rowCount() > 0 )
         {
             // login
             Session::init();
-            Session::set('role', $data['role']);
-            Session::set('loggedIn', true);
-            Session::set('userid', $data['userid']);
-            header('location: ../dashboard');
+            Session::set( 'loggedIn', true );
+            Session::set( 'user_name', $data['name']);
+            Session::set( 'userid', $data['id_user'] );
+            header('location: ../index');
         }
         else
         {
             header('location: ../login');
         }
-        
+    }
+    
+    public function logout()
+    {
+    	Session::init();
+    	Session::destroy();
+    	header('location: ../login');
     }
     
 }
