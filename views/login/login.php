@@ -1,17 +1,12 @@
-<?php
 
-include_once '../model/alerta.class.php';
-
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8">
-    <title>System</title>
+    <title><?php echo SYSTEM_NAME; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Nepali">
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -45,9 +40,11 @@ include_once '../model/alerta.class.php';
       }
 
     </style>
-    <link href="../css/bootstrap-responsive.min.css" rel="stylesheet">
-    <script type="text/javascript" src="../js/jquery.min.js"></script>
-	<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+    <script src="<?php echo URL; ?>public/js/jquery.min.js"></script>
+    <link href="<?php echo URL; ?>public/css/bootstrap.css" rel="stylesheet">
+    <script src="<?php echo URL; ?>public/js/bootstrap.min.js"></script>
+	
+    <script src="<?php echo URL; ?>public/js/jquery.validate.min.js"></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="../js/html5shiv.js"></script>
@@ -67,23 +64,15 @@ include_once '../model/alerta.class.php';
   </head>
   <body>
     <div class="container">
-	  <div class="control-group" id="container">
-	  	<div class="alert alert-error" style="display: none;">
-	  		<ol>
-	  			<li>Preencha corretamento os campos do formul&aacute;rio!</li>
-	  		</ol>
-	  	</div>
-	  	
-	  </div>
-      <form action="../controller/login-controle.php" class="form-signin" method="post" id="formLogin">
+	  
+      <form action="<?php echo URL?>login/run" class="form-signin" method="post" id="formLogin">
       <input type="hidden" name="action" value="autenticarUsuario">
-        <h2 class="form-signin-heading" align="center"><img src="../img/img_logo.png" width="216" height="89" alt=" "></h2>
-        <p>&nbsp;</p>
-        <p>
+        <h2 class="form-signin-heading" align="center"><!-- <img src="../img/img_logo.png" width="216" height="89" alt=" "> --></h2>
+        
 		<?php if (isset($_GET['st'])) { $objAlerta = new Alerta($_GET['st']); } ?> 
-		</p>
-        <input type="text" name="login" class="input-block-level" placeholder="Usuário" required>
-        <input type="password" name="senha" class="input-block-level" placeholder="Senha" required>
+		
+        <input type="text" name="login" class="form-control input-block-level" placeholder="Login" required>
+        <input type="password" name="password" class="form-control input-block-level" placeholder="Senha" required>
         <button class="btn btn-large btn-success" type="submit">Entrar</button>
       </form>
     </div> <!-- /container -->

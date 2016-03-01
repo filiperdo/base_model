@@ -17,7 +17,6 @@
 
 <div class="col-md-6 col-sm-6 col-lg-6">
 
-<h2 class="sub-header"> <?php echo $this->title; ?> </h2>
 <input type="hidden" name="idUser" value="<?=$this->obj->getId_user()?>" />
 
 <div class="form-group">

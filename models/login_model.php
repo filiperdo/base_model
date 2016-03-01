@@ -33,7 +33,8 @@ class Login_Model extends Model
         }
         else
         {
-            header('location: ../login');
+        	$msg = base64_encode( 'LOGIN_INCORRETO' );
+            header('location: ../login?st=' . $msg );
         }
     }
     

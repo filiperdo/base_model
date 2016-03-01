@@ -11,7 +11,7 @@ class Auth
         if ( !$_SESSION['loggedIn'] )
         {
             session_destroy();
-            header('location: ../login');
+            header('location: ' . URL . 'login');
             exit;
         }
     }

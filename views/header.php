@@ -66,7 +66,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php"><?php SYSTEM_NAME; ?></a>
+                <a class="navbar-brand" href="index.php"><?php echo SYSTEM_NAME; ?></a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -75,7 +75,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo Session::get('user_name'); ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="<?php echo URL?>login/logout"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;Editar perfil</a>
+                            <a href="#"><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;&nbsp;&nbsp;Editar perfil</a>
                         </li>
                         <!-- <li>
                             <a href="#"><i class="fa fa-fw fa-envelope"></i>&nbsp;&nbsp;&nbsp;&nbsp;Inbox</a>
@@ -83,7 +83,7 @@
                         
                         <li class="divider"></li>
                         <li>
-                            <a href="../controller/login-controle.php?logout=1"><i class="glyphicon glyphicon-off"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sair</a>
+                            <a href="<?php echo URL?>login/logout"><i class="glyphicon glyphicon-off"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sair</a>
                         </li>
                     </ul>
                 </li>
