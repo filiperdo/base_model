@@ -2,14 +2,26 @@
 
 class Database extends PDO
 {
-    
-    public function __construct($DB_TYPE, $DB_HOST, $DB_NAME, $DB_USER, $DB_PASS)
+	private static $instance;
+	
+    public function __construct()
     {
-    	
-        parent::__construct($DB_TYPE.':host='.$DB_HOST.';dbname='.$DB_NAME, $DB_USER, $DB_PASS);
+        parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
         
         //parent::setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTIONS);
-        
+        $this->exec("SET NAMES 'utf8'");
+        $this->exec('SET character_set_connection=utf8');
+        $this->exec('SET character_set_client=utf8');
+        $this->exec('SET character_set_results=utf8');
+    }
+    
+    public static function getInstance() {
+    	if (!isset(self::$instance) && is_null(self::$instance)) {
+    		$c = __CLASS__;
+    		self::$instance = new $c;
+    	}
+    
+    	return self::$instance;
     }
     
     /**
@@ -38,7 +50,7 @@ class Database extends PDO
      * @param string $table A name of table to insert into
      * @param string $data An associative array
      */
-    public function insert( $table, $data )
+    public function insert( $table, $data, $return_id = true )
     {
         ksort( $data );
         
@@ -53,11 +65,18 @@ class Database extends PDO
         
         $sth->execute();
         
-        // Seleciona o id do ultimo registro
-        $row = $this->select( "select max(id_" . $table . ") as uid from " . $table );
-        
-        // Retorna o id do ultimo registro
-        return $row[0]['uid'];
+        if( $return_id )
+        {
+	        // Seleciona o id do ultimo registro
+	        $row = $this->select( "select max(id_" . $table . ") as uid from " . $table );
+	        
+	        // Retorna o id do ultimo registro
+	        return $row[0]['uid'];
+        }
+        else 
+        {
+        	return true;
+        }
 		
     }
     
@@ -105,6 +124,18 @@ class Database extends PDO
     public function delete($table, $where, $limit = 1)
     {
         return $this->exec("DELETE FROM $table WHERE $where LIMIT $limit");
+    }
+    
+    
+    /**
+     * deleteComposityKey
+     * @param unknown $table
+     * @param unknown $where
+     * @return number
+     */
+    public function deleteComposityKey( $table, $where )
+    {
+    	return $this->exec("DELETE FROM {$table} WHERE {$where} ");
     }
     
 }

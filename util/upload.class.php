@@ -27,10 +27,10 @@ class Upload {
 	 */
 	public function makeUpload() {
 		/**
-		 * Caso a variável dir, estiver vazia, ele retorna um erro
+		 * Caso a variavel dir, estiver vazia, ele retorna um erro
 		 */
 		if ($this->dir == "") {
-			print ("Você deve determinar um caminho para os arquivos.") ;
+			print ("Voce deve determinar um caminho para os arquivos.") ;
 			exit ();
 		}
 		
@@ -41,7 +41,7 @@ class Upload {
 						foreach ( $this->file ["error"] as $key => $error ) {
 							if ($error == UPLOAD_ERR_OK) {
 								/**
-								 * Inicia a cópia do arquivo
+								 * Inicia a copia do arquivo
 								 */
 								$newFileName = date ( "dmYHis" ) . "_" . $this->file ["name"] [$key];
 								move_uploaded_file ( $this->file ["tmp_name"] [$key], $this->dir . $newFileName );
@@ -57,7 +57,7 @@ class Upload {
 				} else {
 					try {
 						/**
-						 * Inicia a cópia do arquivo
+						 * Inicia a copia do arquivo
 						 */
 						$newFileName = date ( "dmYHis" ) . "_" . $this->file ["name"];
 						move_uploaded_file ( $this->file ["tmp_name"], $this->dir . $newFileName );
@@ -72,15 +72,15 @@ class Upload {
 				
 				header ( "Location: index.html" );
 			} else {
-				print ("O(s) arquivo(s) é(são) acima do tamanho pré-determinado.") ;
+				print ("O(s) arquivo(s) e(sao) acima do tamanho pre-determinado.") ;
 			}
 		} else {
-			print ("O(s) arquivo(s) escolhido(s) não é(são) permitido(s).") ;
+			print ("O(s) arquivo(s) escolhido(s) nao e(sao) permitido(s).") ;
 		}
 	}
 	
 	/**
-	 * Verifica se o arquivo é do tamanho determinado pelo programador.
+	 * Verifica se o arquivo e do tamanho determinado pelo programador.
 	 *
 	 * @param int $_max_size        	
 	 * @return Bool
@@ -105,7 +105,7 @@ class Upload {
 	}
 	
 	/**
-	 * Verifica se o arquivo enviado é de uma das extensões permitidas.
+	 * Verifica se o arquivo enviado ï¿½ de uma das extensï¿½es permitidas.
 	 *
 	 * @return Bool
 	 */
@@ -149,7 +149,7 @@ class Upload {
 	}
 	
 	/**
-	 * Verifica se é array.
+	 * Verifica se ï¿½ array.
 	 *
 	 * @param
 	 *        	s Array $_array array de uma key do $_FILES
@@ -163,7 +163,7 @@ class Upload {
 	 * Transforma o valor em MB para Byte
 	 *
 	 * @param
-	 *        	s int $_size valor em MB do tamanho máximo
+	 *        	s int $_size valor em MB do tamanho mï¿½ximo
 	 * @return int
 	 */
 	private function convertMbToBt($_size) {

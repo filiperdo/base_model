@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Classe responsavel por gerar todos os arquivos brutos
  * de uma estrutura MVC baseada em um banco de dados
@@ -9,6 +8,7 @@
  * Data 30/11/2015
  * 
  */
+require 'config.php';
 class Mvc
 {
     private $pathRoot;
@@ -23,10 +23,10 @@ class Mvc
     
     public function __construct()
     {
-    	$this->host = "localhost";
-        $this->user = "root";
-        $this->password = "";
-        $this->dbname = "sysmodel";
+    	$this->host = DB_HOST;
+        $this->user = DB_USER;
+        $this->password = DB_PASS;
+        $this->dbname = DB_NAME;
         
         try{
         	$this->pdo = new PDO('mysql:host='.$this->host.';dbname='.$this->dbname, $this->user, $this->password);
@@ -42,7 +42,6 @@ class Mvc
             mkdir( $this->pathRoot, 0777);
         
         $sql = 'show tables from ' . $this->dbname;
-
         $result = $this->pdo->query($sql);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
@@ -102,7 +101,6 @@ class Mvc
         $fp = fopen( $path . $fileName, 'w' );
         $fw = fwrite( $fp, $content );
         fclose( $fp );
-
         echo '>> ' . $path . $fileName . '<br/>';
     }
     
@@ -115,7 +113,6 @@ class Mvc
     	foreach ( $result as $rowTabela )
     	{
     		$tableName = $rowTabela['Tables_in_'.$this->dbname];
-
     		$Query = $this->pdo->prepare("SHOW COLUMNS FROM {$tableName}");
     		$Query->execute();
     		 
@@ -125,7 +122,7 @@ class Mvc
     		{
     			$colunas[] = $e['Field'];
     		}
-
+    		
             // Configura o diretorio e o nome do arquivo
             // --------------------
             $path = $this->pathRoot . 'views/' . $tableName . '/';
@@ -159,7 +156,6 @@ class Mvc
             $string .= "\n\t\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form" class="btn btn-success">Cadastrar <?php echo $this->title; ?></a>';
             $string .= "\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>";
             $string .= "\n" . '<!-- /.row -->';
-
 			$string .= "\n\n" . '<?php if (isset($_GET["st"])) { $objAlert = new Alerta($_GET["st"]); } ?>' . "\n\n";
 			
 			$string .= '<table class="table table-striped sortable table-condensed">'."\n";
@@ -181,7 +177,17 @@ class Mvc
 			
         	foreach( $colunas as $nome )
             {
-            	$string .= "\t\t" . '<td><?php echo $'.strtolower( $tableName ).'->get'.ucfirst($nome).'(); ?></td>'."\n";
+            	$flags = substr( $nome, 0, 3 );
+            	
+            	if ( $flags == 'id_' && substr($nome, 3) != $tableName )
+            	{
+            		$string .= "\t\t" . '<td><?php echo ""; ?></td>'."\n";
+            	}
+            	else
+            	{
+            		$string .= "\t\t" . '<td><?php echo $'.strtolower( $tableName ).'->get'.ucfirst($nome).'(); ?></td>'."\n";
+            	}
+            	
             } 
 			
 			$string .= "\t\t" . '<td align="right">'."\n";
@@ -214,7 +220,6 @@ class Mvc
         foreach ( $result as $rowTabela )
     	{
     		$tableName = $rowTabela['Tables_in_'.$this->dbname];
-
     		$Query = $this->pdo->prepare("SHOW COLUMNS FROM {$tableName}");
     		$Query->execute();
     		 
@@ -224,7 +229,6 @@ class Mvc
     		{
     			$colunas[] = $e['Field'];
     		}
-
             // Configura o diretorio e o nome do arquivo
             // --------------------
             $path = $this->pathRoot . 'views/' . $tableName . '/';
@@ -235,18 +239,18 @@ class Mvc
             
             $formHTML .= "\n" . '<!-- Page Heading -->';
             $formHTML .= "\n" . '<div class="row">';
-            $formHTML .= "\n" . '<div class="col-lg-12">';
-            $formHTML .= "\n" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
-            $formHTML .= "\n" . '<ol class="breadcrumb">';
-            $formHTML .= "\n" . '<li><a href="<?php echo URL; ?>">Home</a></li>';
-            $formHTML .= "\n" . '<li><a href="<?php echo URL; ?>'. $tableName .'"><?php echo $this->title; ?></a></li>';
-            $formHTML .= "\n" . '<li class="active"><?php echo $this->title; ?></li>';
-            $formHTML .= "\n" . '</ol>';
-            $formHTML .= "\n" . '</div>';
+            $formHTML .= "\n\t" . '<div class="col-lg-12">';
+            $formHTML .= "\n\t\t" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
+            $formHTML .= "\n\t\t" . '<ol class="breadcrumb">';
+            $formHTML .= "\n\t\t\t" . '<li><a href="<?php echo URL; ?>">Home</a></li>';
+            $formHTML .= "\n\t\t\t" . '<li><a href="<?php echo URL; ?>'. $tableName .'"><?php echo $this->title; ?></a></li>';
+            $formHTML .= "\n\t\t\t" . '<li class="active"><?php echo $this->title; ?></li>';
+            $formHTML .= "\n\t\t" . '</ol>';
+            $formHTML .= "\n\t" . '</div>';
             $formHTML .= "\n" . '</div>';
             $formHTML .= "\n" . '<!-- /.row -->';
             
-            $formHTML .= "\n" . '<form id="form1" name="form1" method="post" action="<?php echo URL;?>'.$tableName.'/<?php echo $this->action;?>/">';
+            $formHTML .= "\n\n" . '<form id="form1" name="form1" method="post" action="<?php echo URL;?>'.$tableName.'/<?php echo $this->action;?>/" class="form-horizontal">';
             
             $formHTML .= "\n\n" . '<div class="row">';
             $formHTML .= "\n\n" . '<div class="col-md-6 col-sm-6 col-lg-6">';
@@ -258,20 +262,40 @@ class Mvc
             foreach( $colunas as $nome )
             {
             	$flags = substr( $nome, 0, 3 );
-            
-                $formHTML .= "\n\n" . '<div class="form-group">';
-                $formHTML .= "\n\t" . '<label for="'. $nome .'">'. ucfirst( $nome ) .'</label> ';
-                $formHTML .= "\n\t\t" . '<input type="text" name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required" value="<?=$this->obj->get'. ucfirst( $nome ) .'()?>" />';
-                $formHTML .= "\n" . '</div>';    
+            	
+            	if ( substr($nome, 3) != $tableName )
+            	{
+            		if ( $flags == 'id_' )
+            		{
+		                $formHTML .= "\n\n" . '<div class="form-group">';
+		                $formHTML .= "\n\t" . '<label for="'. $nome .'" class="col-sm-2 control-label">'. ucfirst( $nome ) .'</label> ';
+		                $formHTML .= "\n\t" . '<div class="col-sm-10"> ';
+		                $formHTML .= "\n\t" . '<select name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required">';
+		                $formHTML .= "\n\t\t" . '<option value=""></option>';
+		                $formHTML .= "\n\t" . '</select>';
+		                $formHTML .= "\n\t" . '</div>';
+		                $formHTML .= "\n" . '</div>';
+            		}
+            		else
+            		{
+            			$formHTML .= "\n\n" . '<div class="form-group">';
+            			$formHTML .= "\n\t" . '<label for="'. $nome .'" class="col-sm-2 control-label">'. ucfirst( $nome ) .'</label> ';
+            			$formHTML .= "\n\t" . '<div class="col-sm-10"> ';
+            			$formHTML .= "\n\t\t" . '<input type="text" name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required" value="<?=$this->obj->get'. ucfirst( $nome ) .'()?>" />';
+            			$formHTML .= "\n\t" . '</div>';
+            			$formHTML .= "\n" . '</div>';
+            		}
+            	}
             }
             
             $formHTML .= "\n\n" . '<div class="form-group">';
-            $formHTML .= "\n\t" . '<input type="submit" name="salvar" id="salvar" value="Salvar" class="btn btn-success" />';
-            $formHTML .= "\n\t" . '<a href="<?php echo URL; ?>'. $tableName .'" class="btn btn-info">Cancelar</a>';
+            $formHTML .= "\n\t" . '<div class="col-sm-10  col-sm-offset-2">';
+            $formHTML .= "\n\t\t" . '<input type="submit" name="salvar" id="salvar" value="Salvar" class="btn btn-success" />';
+            $formHTML .= "\n\t\t" . '<a href="<?php echo URL; ?>'. $tableName .'" class="btn btn-info">Cancelar</a>';
+            $formHTML .= "\n\t" . '</div>';
             $formHTML .= "\n" . '</div>';
             
             $formHTML .= "\n\n" . "\n</div>\n</div>\n\n</form>";
-
             $this->createFile( $path, $fileName, $formHTML );
         }
     }
@@ -285,7 +309,6 @@ class Mvc
     	foreach ( $result as $rowTabela )
         {
             $tableName = $rowTabela['Tables_in_'.$this->dbname];
-
         	$Query = $this->pdo->prepare("SHOW COLUMNS FROM {$tableName}");
     		$Query->execute();
     	
@@ -295,7 +318,6 @@ class Mvc
     		{
     			$colunas[] = $e['Field'];
     		}
-
             // Configura o diretorio e o nome do arquivo
             // --------------------
             $path = $this->pathRoot . 'controllers/';
@@ -366,7 +388,12 @@ class Mvc
             
             foreach( $colunas as $nome )
             {
-            	$string .= "\n\t\t\t" . "'{$nome}' => " . '$_POST["' . $nome . '"], ';
+            	$flags = substr( $nome, 0, 3 );
+            	
+            	if ( substr($nome, 3) != $tableName )
+            	{
+            		$string .= "\n\t\t\t" . "'{$nome}' => " . '$_POST["' . $nome . '"], ';
+            	}
             }
             
             $string .= "\n\t\t".');';
@@ -383,11 +410,15 @@ class Mvc
             $string .= "\t".'public function edit( $id )';
             $string .= "\n\t".'{';
             $string .= "\n\t\t".'$data = array(';
-			$string .= "\n\t\t\t".'"id_' . $tableName . '" 	=> $id,';
 			
 			foreach( $colunas as $nome )
 			{
-				$string .= "\n\t\t\t" . "'{$nome}' => " . '$_POST["' . $nome . '"], ';
+				$flags = substr( $nome, 0, 3 );
+				 
+				if ( substr($nome, 3) != $tableName )
+				{
+					$string .= "\n\t\t\t" . "'{$nome}' => " . '$_POST["' . $nome . '"], ';
+				}
 			}
             			
             $string .= "\n\t\t".');';
@@ -448,7 +479,18 @@ class Mvc
             // Inclui as classes de chaves estrangeiras
             // ************************************************
            
-            $string .= "\n/** \n * Classe ".ucfirst( $nomeClasse )."\n * @author __ \n *\n * Data: ". date('d/m/Y') ."\n */";
+            $string .= "\n/** \n * Classe ".ucfirst( $nomeClasse )."\n * @author __ \n *\n * Data: ". date('d/m/Y') ."\n */ \n\n";
+            
+            // Verifica se tem alguma dependecia para fazer os includes
+            foreach( $colunas as $nome )
+            {
+            	$flags = substr( $nome, 0, 3 );
+            
+            	if ( $flags == 'id_' && substr($nome, 3) != $nomeClasse )
+            	{
+            		$string .= "include_once '" . strtolower(substr($nome, 3)) . "_model.php';\n";
+            	}
+            }
             
             $string .= "\nclass " . ucfirst( $nomeClasse ) . "_Model extends Model\n{\n";
             
@@ -461,8 +503,7 @@ class Mvc
             foreach( $colunas as $nome )
             {
                 $flags = substr( $nome, 0, 3 );
-
-                if ( $flags == 'id_' )
+                if ( $flags == 'id_' && substr($nome, 3) != $nomeClasse )
                 {
                     // Se for chave estrangeira, retiramos o 'id_' do inicio do nome do campo
                     $string .= "\tprivate $" . strtolower(substr($nome, 3)) . ";\n";
@@ -472,9 +513,7 @@ class Mvc
                     $string .= "\tprivate $" . $nome . ";\n";
                 }
             }
-
             $string .= "\n\tpublic function __construct()\n\t{\n\t\t";
-
             $string .= "parent::__construct();\n";
 	        
 	        // ************************************************
@@ -482,16 +521,12 @@ class Mvc
 			// ************************************************
 	        foreach( $colunas as $nome )
             {
-                $flags = substr( $e['Field'], 0, 3 );
-
-                if ( $flags == 'id_' )
+                $flags = substr( $nome, 0, 3 );
+                if ( $flags == 'id_' && substr($nome, 3) != $nomeClasse )
                 {
-                    //$nomeTemp = ucfirst(substr(mysql_field_name($resField, $i), 3));
-
-                    //$string .= "\n\n\t\t" . '$obj' . $nomeTemp . ' = new ' . $nomeTemp . '();';
-                    //$string .= "\n\t\t" . '$this->' . strtolower(substr($nome, 3)) . ' = $obj' . $nomeTemp . ';';
+                    $string .= "\n\t\t" . '$this->' . strtolower(substr($nome, 3)) . ' = new ' . ucfirst( substr($nome, 3) ) . '_Model();';
                     
-                	$string .= "\n\t\t" . '$this->' . strtolower(substr($nome, 3)) . ' = "";';
+                	//$string .= "\n\t\t" . '$this->' . strtolower(substr($nome, 3)) . ' = "";';
                 } 
                 else
                 {
@@ -511,11 +546,10 @@ class Mvc
             
             foreach( $colunas as $nome )
             {
-                $flags = substr( $e['Field'], 0, 3 );
-
-                if ( $flags == 'id_' )
+                $flags = substr( $nome, 0, 3 );
+                if ( $flags == 'id_' && substr($nome, 3) != $nomeClasse )
                 {
-                    $string .= "\tpublic function set" . ucfirst(substr($nome, 3)) . '( $' . strtolower(substr($nome, 3)) . ' )' . "\n\t{\n\t";
+                    $string .= "\tpublic function set" . ucfirst(substr($nome, 3)) . '( '. ucfirst(substr($nome, 3)) .'_Model $' . strtolower(substr($nome, 3)) . ' )' . "\n\t{\n\t";
                     $string .= "\t" . '$this->' . strtolower(substr($nome, 3)) . ' = ' . '$' . strtolower(substr($nome, 3)) . ";\n\t}\n\n";
                 }
                 else
@@ -536,10 +570,8 @@ class Mvc
             foreach( $colunas as $nome )
             {
                 //$nome = $e['Field'];
-
-                $flags = substr( $e['Field'], 0, 3 );
-
-                if ( $flags == 'id_' )
+                $flags = substr( $nome, 0, 3 );
+                if ( $flags == 'id_' && substr($nome, 3) != $nomeClasse )
                 {
                     $string .= "\tpublic function get" . ucfirst(substr($nome, 3)) . '()' . "\n\t{\n\t";
                     $string .= "\treturn " . '$this->' . strtolower(substr($nome, 3)) . ";\n\t}\n\n";
@@ -663,27 +695,22 @@ class Mvc
             $string .= "\n\t}";
 			
             
-            // Método montarObjeto
+            // MÃ©todo montarObjeto
             // ---------------
             $string .= "\n\n\t/** \n\t* Metodo montarObjeto\n\t*/\n";
             
             $string .= "\t" . 'private function montarObjeto( $row )' . "\n\t{";
-
             foreach( $colunas as $nome )
             {
                 //$nome = $e['Field'];
-
-                $flags = substr( $e['Field'], 0, 3 );
-
-                if ( $flags == 'id_' )
+                $flags = substr( $nome, 0, 3 );
+                if ( $flags == 'id_' && substr($nome, 3) != $nomeClasse )
                 {
-                    //$nomeTemp = ucfirst(substr(mysql_field_name($resField, $i), 3));
-
-                    //$string .= "\n\n\t\t" . '$obj' . $nomeTemp . ' = new ' . $nomeTemp . '();';
-                    //$string .= "\n\t\t" . '$obj' . $nomeTemp . '->obter' . $nomeTemp . '( $row["id_' . strtolower($nomeTemp) . '"] );' . "\n";
-
-                    //$string .= "\n\t\t" . '$this->set' . ucfirst(substr($nome, 3)) . '( ' . '$obj' . $nomeTemp . ' );';
-                    $string .= "\n\t\t" . '$this->set' . ucfirst(substr($nome, 3)) . '( $row["' . $nome . '"] );';
+                    $nomeTemp = ucfirst(substr($nome, 3));
+                    $string .= "\n\n\t\t" . '$obj' . $nomeTemp . ' = new ' . $nomeTemp . '_Model();';
+                    $string .= "\n\t\t" . '$obj' . $nomeTemp . '->obter' . $nomeTemp . '( $row["id_' . strtolower($nomeTemp) . '"] );' ;
+                    $string .= "\n\t\t" . '$this->set' . ucfirst(substr($nome, 3)) . '( ' . '$obj' . $nomeTemp . ' );';
+                    //$string .= "\n\t\t" . '$this->set' . ucfirst(substr($nome, 3)) . '( $row["' . $nome . '"] );';
                 } else
                 {
                     $string .= "\n\t\t" . '$this->set' . ucfirst($nome) . '( $row["' . $nome . '"] );';
@@ -694,7 +721,6 @@ class Mvc
             $string .= "\n\n\t\t" . 'return $this;';
             
             $string .= "\n\t}";
-
             $string .= "\n}\n?>";
             
             $this->createFile( $path, $fileName, $string );
@@ -702,5 +728,4 @@ class Mvc
         }
     }
 }
-
 new Mvc();
