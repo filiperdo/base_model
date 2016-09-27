@@ -1,7 +1,10 @@
 <!-- Page Heading -->
 <div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header"><?php echo $this->title; ?></h1>
+	<div class="col-md-12 col-sm-12 col-xs-12">
+	<div class="x_panel">
+	<div class="x_title">
+		<h2 class="page-header"><?php echo $this->title; ?></h2>
+		<div class="clearfix"></div>
 		<div class="row">
 			<div class="col-lg-6 col-md-6">
 				<ol class="breadcrumb">
@@ -22,16 +25,16 @@
 				</form>
 			</div>
 			<div class="col-lg-2 col-md-2">
-				<a href="<?php echo URL;?>typeuser/form" class="btn btn-success">Cadastrar <?php echo $this->title; ?></a>
+				<a href="<?php echo URL;?>typeuser/form" class="btn btn-dark">Cadastrar <?php echo $this->title; ?></a>
 			</div>
 		</div>
 	</div>
-</div>
-<!-- /.row -->
+
+<div class="x_content">
 
 <?php if (isset($_GET["st"])) { $objAlert = new Alerta($_GET["st"]); } ?>
 
-<table class="table table-striped sortable table-condensed">
+<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
 	<thead>
 	<tr>
 		<th>Id_typeuser </th>
@@ -45,14 +48,17 @@
  		<td><?php echo $typeuser->getId_typeuser(); ?></td>
 		<td><?php echo $typeuser->getName(); ?></td>
 		<td align="right">
-			<a href="<?php echo URL;?>typeuser/form/<?php echo $typeuser->getId_typeuser();?>" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>
+			<a href="<?php echo URL;?>typeuser/form/<?php echo $typeuser->getId_typeuser();?>" class="btn btn-dark btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>
 			<a href="<?php echo URL;?>typeuser/delete/<?php echo $typeuser->getId_typeuser();?>" class="delete btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>
 		</td>
 		</tr>
 	<?php } ?>
 	</tbody>
 </table>
-
+</div>
+</div>
+</div>
+</div>
 
 <script>
 $(function() {

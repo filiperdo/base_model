@@ -4,20 +4,27 @@
  * Classe User
  * @author __ 
  *
- * Data: 01/03/2016
- */
+ * Data: 13/09/2016
+ */ 
+
+include_once 'typeuser_model.php';
+
 class User_Model extends Model
 {
 	/** 
 	* Atributos Private 
 	*/
-	private $user;
+	private $id_user;
 	private $name;
 	private $login;
 	private $password;
-	private $count_login;
+	private $email;
+	private $numlogin;
 	private $date;
 	private $typeuser;
+	private $lastlogin;
+	private $status;
+	private $path;
 
 	public function __construct()
 	{
@@ -27,9 +34,13 @@ class User_Model extends Model
 		$this->name = '';
 		$this->login = '';
 		$this->password = '';
-		$this->count_login = '';
+		$this->email = '';
+		$this->numlogin = '';
 		$this->date = '';
-		$this->id_typeuser = '';
+		$this->typeuser = new Typeuser_Model();
+		$this->lastlogin = '';
+		$this->status = '';
+		$this->path = '';
 	}
 
 	/** 
@@ -55,9 +66,14 @@ class User_Model extends Model
 		$this->password = $password;
 	}
 
-	public function setCount_login( $count_login )
+	public function setEmail( $email )
 	{
-		$this->count_login = $count_login;
+		$this->email = $email;
+	}
+
+	public function setNumlogin( $numlogin )
+	{
+		$this->numlogin = $numlogin;
 	}
 
 	public function setDate( $date )
@@ -65,9 +81,24 @@ class User_Model extends Model
 		$this->date = $date;
 	}
 
-	public function setId_typeuser( $id_typeuser )
+	public function setTypeuser( Typeuser_Model $typeuser )
 	{
-		$this->id_typeuser = $id_typeuser;
+		$this->typeuser = $typeuser;
+	}
+
+	public function setLastlogin( $lastlogin )
+	{
+		$this->lastlogin = $lastlogin;
+	}
+
+	public function setStatus( $status )
+	{
+		$this->status = $status;
+	}
+
+	public function setPath( $path )
+	{
+		$this->path = $path;
 	}
 
 	/** 
@@ -93,9 +124,14 @@ class User_Model extends Model
 		return $this->password;
 	}
 
-	public function getCount_login()
+	public function getEmail()
 	{
-		return $this->count_login;
+		return $this->email;
+	}
+
+	public function getNumlogin()
+	{
+		return $this->numlogin;
 	}
 
 	public function getDate()
@@ -103,9 +139,24 @@ class User_Model extends Model
 		return $this->date;
 	}
 
-	public function getId_typeuser()
+	public function getTypeuser()
 	{
-		return $this->id_typeuser;
+		return $this->typeuser;
+	}
+
+	public function getLastlogin()
+	{
+		return $this->lastlogin;
+	}
+
+	public function getStatus()
+	{
+		return $this->status;
+	}
+
+	public function getPath()
+	{
+		return $this->path;
 	}
 
 
@@ -217,9 +268,16 @@ class User_Model extends Model
 		$this->setName( $row["name"] );
 		$this->setLogin( $row["login"] );
 		$this->setPassword( $row["password"] );
-		$this->setCount_login( $row["count_login"] );
+		$this->setEmail( $row["email"] );
+		$this->setNumlogin( $row["numlogin"] );
 		$this->setDate( $row["date"] );
-		$this->setId_typeuser( $row["id_typeuser"] );
+
+		$objTypeuser = new Typeuser_Model();
+		$objTypeuser->obterTypeuser( $row["id_typeuser"] );
+		$this->setTypeuser( $objTypeuser );
+		$this->setLastlogin( $row["lastlogin"] );
+		$this->setStatus( $row["status"] );
+		$this->setPath( $row["path"] );
 
 		return $this;
 	}

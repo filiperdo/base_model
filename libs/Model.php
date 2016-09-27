@@ -4,9 +4,15 @@ include_once 'libs/Database.php';
 
 class Model {
 
-    function __construct() {
-        $this->db = new Database(DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS);
-        
+    function __construct( Database $bdParam = null ) {
+    	
+    	if ($bdParam == null) {
+    		$this->db = Database::getInstance();
+    	} else {
+    		$this->db = $bdParam;
+    	}
+    	
+	    //$this->db = new Database();	    
     }
 
 }

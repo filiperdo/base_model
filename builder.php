@@ -1,11 +1,11 @@
 <?php
 /**
- * Classe responsavel por gerar todos os arquivos brutos
+ * Classe responsavel por gerar todos os arquivos
  * de uma estrutura MVC baseada em um banco de dados
  * 
  * @author Filipe Rodrigues
  * 
- * Data 30/11/2015
+ * Ultima atualizacao 09/09/2016
  * 
  */
 require 'config.php';
@@ -36,7 +36,7 @@ class Mvc
         	echo "Erro!: " . $e->getMessage();
         }
         
-        $this->pathRoot = '_files/_mvc/';
+        $this->pathRoot = '_files/mvc/';
         
         if( !is_dir( $this->pathRoot ) )
             mkdir( $this->pathRoot, 0777);
@@ -47,7 +47,7 @@ class Mvc
         
         //var_dump( $result );
         
-        $this->createMenu( $result );
+        //$this->createMenu( $result );
         
         $this->createModel( $result );
         
@@ -131,8 +131,13 @@ class Mvc
             $string  = '';
             $string .= '<!-- Page Heading -->';
             $string .= "\n" . '<div class="row">';
-            $string .= "\n\t" . '<div class="col-lg-12">';
-            $string .= "\n\t\t" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
+            $string .= "\n\t" . '<div class="col-md-12 col-sm-12 col-xs-12">';
+            
+            $string .= "\n\t" . '<div class="x_panel">';
+            $string .= "\n\t" . '<div class="x_title">';            		
+            
+            $string .= "\n\t\t" . '<h2 class="page-header"><?php echo $this->title; ?></h2>';
+            $string .= "\n\t\t" . '<div class="clearfix"></div>';
             $string .= "\n\t\t" . '<div class="row">';
             $string .= "\n\t\t\t" . '<div class="col-lg-6 col-md-6">';
             $string .= "\n\t\t\t\t" . '<ol class="breadcrumb">';
@@ -153,12 +158,15 @@ class Mvc
             $string .= "\n\t\t\t\t" . '</form>';
             $string .= "\n\t\t\t" . '</div>'; 
             $string .= "\n\t\t\t" . '<div class="col-lg-2 col-md-2">';
-            $string .= "\n\t\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form" class="btn btn-success">Cadastrar <?php echo $this->title; ?></a>';
-            $string .= "\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>";
-            $string .= "\n" . '<!-- /.row -->';
+            $string .= "\n\t\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form" class="btn btn-dark">Cadastrar <?php echo $this->title; ?></a>';
+            $string .= "\n\t\t\t</div>\n\t\t</div>\n\t</div>\n";
+            $string .= "\n";
+            
+            $string .= '<div class="x_content">';
+            
 			$string .= "\n\n" . '<?php if (isset($_GET["st"])) { $objAlert = new Alerta($_GET["st"]); } ?>' . "\n\n";
 			
-			$string .= '<table class="table table-striped sortable table-condensed">'."\n";
+			$string .= '<table id="datatable-responsive" class="table table-striped" cellspacing="0" width="100%">'."\n";
 			$string .= "\t" . '<thead>'."\n";
 			$string .= "\t" . '<tr>'."\n";
 			
@@ -191,7 +199,7 @@ class Mvc
             } 
 			
 			$string .= "\t\t" . '<td align="right">'."\n";
-			$string .= "\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form/<?php echo $'.strtolower( $tableName ).'->getId_'.strtolower( $tableName ).'();?>" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>'."\n";
+			$string .= "\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/form/<?php echo $'.strtolower( $tableName ).'->getId_'.strtolower( $tableName ).'();?>" class="btn btn-dark btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>'."\n";
 			$string .= "\t\t\t" . '<a href="<?php echo URL;?>'.$tableName.'/delete/<?php echo $'.strtolower( $tableName ).'->getId_'.strtolower( $tableName ).'();?>" class="delete btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>'."\n";
 			$string .= "\t\t" . '</td>' . "\n";
 			$string .= "\t\t" . '</tr>' . "\n";
@@ -199,6 +207,7 @@ class Mvc
 			$string .= "\t" . '</tbody>' . "\n";
 			$string .= '</table>'."\n";
 			
+			$string .= "</div>\n</div>\n</div>\n</div>";
 			
 			$string .= "\n\n" . '<script>';
 			$string .= "\n" . '$(function() {';
@@ -239,21 +248,23 @@ class Mvc
             
             $formHTML .= "\n" . '<!-- Page Heading -->';
             $formHTML .= "\n" . '<div class="row">';
-            $formHTML .= "\n\t" . '<div class="col-lg-12">';
-            $formHTML .= "\n\t\t" . '<h1 class="page-header"><?php echo $this->title; ?></h1>';
+            $formHTML .= "\n\t" . '<div class="col-md-12 col-sm-12 col-xs-12">';
+            $formHTML .= "\n\t" . '<div class="x_panel">';
+            $formHTML .= "\n\t" . '<div class="x_title">';
+            $formHTML .= "\n\t\t" . '<h2 class="page-header"><?php echo $this->title; ?></h2>';
+            $formHTML .= "\n\t\t" . '<div class="clearfix"></div>';
             $formHTML .= "\n\t\t" . '<ol class="breadcrumb">';
             $formHTML .= "\n\t\t\t" . '<li><a href="<?php echo URL; ?>">Home</a></li>';
-            $formHTML .= "\n\t\t\t" . '<li><a href="<?php echo URL; ?>'. $tableName .'"><?php echo $this->title; ?></a></li>';
+            $formHTML .= "\n\t\t\t" . '<li><a href="<?php echo URL; ?>'. $tableName .'">Listar '.ucfirst($tableName).'</a></li>';
             $formHTML .= "\n\t\t\t" . '<li class="active"><?php echo $this->title; ?></li>';
             $formHTML .= "\n\t\t" . '</ol>';
             $formHTML .= "\n\t" . '</div>';
-            $formHTML .= "\n" . '</div>';
-            $formHTML .= "\n" . '<!-- /.row -->';
+            
             
             $formHTML .= "\n\n" . '<form id="form1" name="form1" method="post" action="<?php echo URL;?>'.$tableName.'/<?php echo $this->action;?>/" class="form-horizontal">';
             
             $formHTML .= "\n\n" . '<div class="row">';
-            $formHTML .= "\n\n" . '<div class="col-md-6 col-sm-6 col-lg-6">';
+            $formHTML .= "\n\n" . '<div class="col-md-6 col-sm-6 col-lg-6 col-xs-12">';
             
             $formHTML .= "\n" . '<input type="hidden" name="id'. ucfirst( $tableName ) .'" value="<?=$this->obj->getId_'. $tableName .'()?>" />';
             
@@ -268,9 +279,9 @@ class Mvc
             		if ( $flags == 'id_' )
             		{
 		                $formHTML .= "\n\n" . '<div class="form-group">';
-		                $formHTML .= "\n\t" . '<label for="'. $nome .'" class="col-sm-2 control-label">'. ucfirst( $nome ) .'</label> ';
-		                $formHTML .= "\n\t" . '<div class="col-sm-10"> ';
-		                $formHTML .= "\n\t" . '<select name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required">';
+		                $formHTML .= "\n\t" . '<label for="'. $nome .'" class="col-md-2 col-sm-2 col-xs-12 control-label">'. ucfirst( $nome ) .'</label> ';
+		                $formHTML .= "\n\t" . '<div class="col-md-9 col-sm-9 col-xs-12"> ';
+		                $formHTML .= "\n\t" . '<select name="'. $nome .'" id="'. $nome .'"  class="form-control col-md-7 col-xs-12" required="required">';
 		                $formHTML .= "\n\t\t" . '<option value=""></option>';
 		                $formHTML .= "\n\t" . '</select>';
 		                $formHTML .= "\n\t" . '</div>';
@@ -279,9 +290,9 @@ class Mvc
             		else
             		{
             			$formHTML .= "\n\n" . '<div class="form-group">';
-            			$formHTML .= "\n\t" . '<label for="'. $nome .'" class="col-sm-2 control-label">'. ucfirst( $nome ) .'</label> ';
-            			$formHTML .= "\n\t" . '<div class="col-sm-10"> ';
-            			$formHTML .= "\n\t\t" . '<input type="text" name="'. $nome .'" id="'. $nome .'"  class="form-control" required="required" value="<?=$this->obj->get'. ucfirst( $nome ) .'()?>" />';
+            			$formHTML .= "\n\t" . '<label for="'. $nome .'" class="col-md-2 col-sm-2 col-xs-12 control-label">'. ucfirst( $nome ) .'</label> ';
+            			$formHTML .= "\n\t" . '<div class="col-md-9 col-sm-9 col-xs-12"> ';
+            			$formHTML .= "\n\t\t" . '<input type="text" name="'. $nome .'" id="'. $nome .'"  class="form-control col-md-7 col-xs-12" required="required" value="<?=$this->obj->get'. ucfirst( $nome ) .'()?>" />';
             			$formHTML .= "\n\t" . '</div>';
             			$formHTML .= "\n" . '</div>';
             		}
@@ -291,11 +302,17 @@ class Mvc
             $formHTML .= "\n\n" . '<div class="form-group">';
             $formHTML .= "\n\t" . '<div class="col-sm-10  col-sm-offset-2">';
             $formHTML .= "\n\t\t" . '<input type="submit" name="salvar" id="salvar" value="Salvar" class="btn btn-success" />';
-            $formHTML .= "\n\t\t" . '<a href="<?php echo URL; ?>'. $tableName .'" class="btn btn-info">Cancelar</a>';
+            $formHTML .= "\n\t\t" . '<a href="<?php echo URL; ?>'. $tableName .'" class="btn btn-primary">Cancelar</a>';
             $formHTML .= "\n\t" . '</div>';
             $formHTML .= "\n" . '</div>';
             
             $formHTML .= "\n\n" . "\n</div>\n</div>\n\n</form>";
+            
+            $formHTML .= "\n" . '</div>';
+            $formHTML .= "\n" . '</div>';
+            $formHTML .= "\n" . '</div>';
+            $formHTML .= "\n" . '<!-- /.row -->';
+            
             $this->createFile( $path, $fileName, $formHTML );
         }
     }

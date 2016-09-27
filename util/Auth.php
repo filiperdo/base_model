@@ -8,7 +8,7 @@ class Auth
     {
         @session_start();
         
-        if ( !$_SESSION['loggedIn'] )
+        if ( !Session::get('loggedIn') )
         {
             session_destroy();
             header('location: ' . URL . 'login');

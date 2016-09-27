@@ -2,6 +2,8 @@
 _files
 .buildpath
 .project
+config.php
+.htaccess
 
 
 

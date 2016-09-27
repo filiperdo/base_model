@@ -61,10 +61,11 @@
 			if (array_key_exists($format, self::$mappers))
 				return self::$mappers[$format];
 			
+			
 			$mapperClassName = 'WideImage_Mapper_' . $format;
 			
 			if (!class_exists($mapperClassName, false))
-			{
+			{	
 				$mapperFileName = WideImage::path() . 'Mapper/' . $format . '.php';
 				if (file_exists($mapperFileName))
 					require_once $mapperFileName;

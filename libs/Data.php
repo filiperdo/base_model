@@ -113,7 +113,7 @@ class Data
 	static public function getPhotoUser( $id )
 	{
 		$pasta = 'public/img/user/' . $id . '/';
-		$foto_padrao = URL . 'public/img/avatar-fat.jpg';
+		$foto_padrao = URL . 'public/img/user.png';
 		
 		$allowedExts = array(".gif", ".jpeg", ".jpg", ".png");
 		
@@ -165,7 +165,6 @@ class Data
 			}
 		}
 		
-		
 		return $array_img;
 	}
 
@@ -186,10 +185,82 @@ class Data
 	 */
 	static function formatSlug($str)
 	{
+		// assume $str esteja em UTF-8
+		$map = array(
+		    'á' => 'a',
+		    'à' => 'a',
+		    'ã' => 'a',
+		    'â' => 'a',
+		    'é' => 'e',
+		    'ê' => 'e',
+		    'í' => 'i',
+		    'ó' => 'o',
+		    'ô' => 'o',
+		    'õ' => 'o',
+		    'ú' => 'u',
+		    'ü' => 'u',
+		    'ç' => 'c',
+		    'Á' => 'A',
+		    'À' => 'A',
+		    'Ã' => 'A',
+		    'Â' => 'A',
+		    'É' => 'E',
+		    'Ê' => 'E',
+		    'Í' => 'I',
+		    'Ó' => 'O',
+		    'Ô' => 'O',
+		    'Õ' => 'O',
+		    'Ú' => 'U',
+		    'Ü' => 'U',
+		    'Ç' => 'C'
+		);
+		 
+		$str = strtr($str, $map);
+
+		$str = preg_replace( '/[`^~\'"]/', null, iconv( 'UTF-8', 'ASCII//TRANSLIT', $str ) );
 		$str = strtolower(trim($str));
 		$str = preg_replace('/[^a-z0-9-]/', '-', $str);
 		$str = preg_replace('/-+/', "-", $str);
 		return $str;
+
+	}
+	
+	
+	static function formatSlug_old($string, $slug = true)
+	{
+		$string = strtolower($string);
+		
+		// Código ASCII das vogais
+		$ascii['a'] = range(224, 230);
+		$ascii['e'] = range(232, 235);
+		$ascii['i'] = range(236, 239);
+		$ascii['o'] = array_merge(range(242, 246), array(240, 248));
+		
+		$ascii['u'] = range(249, 252);
+		// Código ASCII dos outros caracteres
+		$ascii['b'] = array(223);
+		$ascii['c'] = array(231);
+		$ascii['d'] = array(208);
+		$ascii['n'] = array(241);
+		$ascii['y'] = array(253, 255);
+		
+		foreach ($ascii as $key=>$item) {
+			$acentos = '';
+			foreach ($item AS $codigo) $acentos .= chr($codigo);
+			$troca[$key] = '/['.$acentos.']/i';
+		}
+		
+		$string = preg_replace(array_values($troca), array_keys($troca), $string);
+		
+		// Slug?
+		if ($slug) {
+			// Troca tudo que não for letra ou número por um caractere ($slug)
+			$string = preg_replace('/[^a-z0-9]/i', $slug, $string);
+			// Tira os caracteres ($slug) repetidos
+			$string = preg_replace('/' . $slug . '{2,}/i', $slug, $string);
+			$string = trim($string, $slug);
+		}
+		return $string;
 	}
 
 }

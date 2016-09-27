@@ -1,17 +1,21 @@
-<?php
+<?php 
 
 class Index extends Controller {
 
-    function __construct() {
-        parent::__construct();
-    }
-    
-    function index() {
+	public function __construct() {
+		parent::__construct();
+		Auth::handleLogin();
+	}
 
-        $this->view->title = 'Home';
-        $this->view->render('header');
-        $this->view->render('index/index');
-        $this->view->render('footer');
-    }
-    
+	/** 
+	* Metodo index
+	*/
+	public function index()
+	{
+		$this->view->title = "Index";
+
+		$this->view->render( "header" );
+		$this->view->render( "index/index" );
+		$this->view->render( "footer" );
+	}
 }

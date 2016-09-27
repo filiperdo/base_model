@@ -4,14 +4,16 @@
  * Classe Typeuser
  * @author __ 
  *
- * Data: 01/03/2016
- */
+ * Data: 13/09/2016
+ */ 
+
+
 class Typeuser_Model extends Model
 {
 	/** 
 	* Atributos Private 
 	*/
-	private $typeuser;
+	private $id_typeuser;
 	private $name;
 
 	public function __construct()

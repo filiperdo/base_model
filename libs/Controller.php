@@ -23,7 +23,6 @@ class Controller {
             
             $modelName = $name . '_Model';
             $this->model = new $modelName();
-        }        
+        }
     }
-
 }

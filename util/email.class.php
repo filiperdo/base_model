@@ -27,11 +27,13 @@ class Email
         $this->mail->Host = AWS_HOST_SMTP; // Endereço do servidor SMTP (caso queira utilizar a autenticação, utilize o host smtp.seudomínio.com.br)
         $this->mail->Username = AWS_USERNAME; // Usuário do servidor SMTP (endereço de email)
         $this->mail->Password = AWS_PASSWORD; // Senha do servidor SMTP (senha do email usado)
-     
+     	$this->mail->SMTPSecure = 'ssl';
+     	$this->mail->Port = 465; // 587
+     	
         $this->mail->isHTML(true);
 		
 		$this->mail->SMTPDebug = 0;
-		$this->mail->Port = AWS_PORT; // 587
+		//$this->mail->Port = AWS_PORT; // 587
        
         // Define o remetente
         // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -75,13 +77,13 @@ class Email
         
         if ($enviado)
         {
-            echo 'Enviou';
-            //return true;
+            //echo 'Enviou';
+            return true;
         }
         else
         {
-            echo 'Não enviou';
-            //return false;
+            //echo 'Não enviou';
+            return false;
         }
 
     }
@@ -123,6 +125,7 @@ class Email
     {
     	$this->mail->Subject = "Robo3D - Confirmacao de cadastro";
     	$this->mail->AddAddress( trim( $email ) );
+    	$this->mail->AddBCC('frodrigues@anacom.com.br');
     	
     	// Configura o corpo do email
     	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
