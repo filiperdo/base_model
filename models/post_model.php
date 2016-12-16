@@ -1,18 +1,18 @@
-<?php 
+<?php
 
-/** 
+/**
  * Classe Post
- * @author __ 
+ * @author __
  *
  * Data: 01/06/2016
- */ 
+ */
 require_once 'models/user_model.php';
 
 
 class Post_Model extends Model
 {
-	/** 
-	* Atributos Private 
+	/**
+	* Atributos Private
 	*/
 	private $id_post;
 	private $title;
@@ -47,7 +47,7 @@ class Post_Model extends Model
 		$this->source = '';
 	}
 
-	/** 
+	/**
 	* Metodos set's
 	*/
 	public function setId_post( $id_post )
@@ -94,7 +94,7 @@ class Post_Model extends Model
 	{
 		$this->mainpicture = $mainpicture;
 	}
-	
+
 	public function setType( $type )
 	{
 		$this->type = $type;
@@ -115,7 +115,7 @@ class Post_Model extends Model
 		$this->source = $source;
 	}
 
-	/** 
+	/**
 	* Metodos get's
 	*/
 	public function getId_post()
@@ -162,7 +162,7 @@ class Post_Model extends Model
 	{
 		return $this->mainpicture;
 	}
-	
+
 	public function getType()
 	{
 		return $this->type;
@@ -170,7 +170,7 @@ class Post_Model extends Model
 
 	public function getSlug()
 	{
-		return $this->slug();
+		return $this->slug;
 	}
 
 	public function getAuthor()
@@ -183,7 +183,7 @@ class Post_Model extends Model
 		return $this->source;
 	}
 
-	/** 
+	/**
 	* Metodo create
 	*/
 	public function create( $data )
@@ -199,7 +199,7 @@ class Post_Model extends Model
 		return $id;
 	}
 
-	/** 
+	/**
 	* Metodo edit
 	*/
 	public function edit( $data, $id )
@@ -215,14 +215,14 @@ class Post_Model extends Model
 		return $update;
 	}
 
-	/** 
+	/**
 	* Metodo delete
 	*/
 	public function delete( $id )
 	{
 		$this->db->beginTransaction();
 
-		if( !$delete = $this->db->delete("post", "id_post = {$id} ") ){ 
+		if( !$delete = $this->db->delete("post", "id_post = {$id} ") ){
 			$this->db->rollBack();
 			return false;
 		}
@@ -231,7 +231,7 @@ class Post_Model extends Model
 		return $delete;
 	}
 
-	/** 
+	/**
 	* Metodo obterPost
 	*/
 	public function obterPost( $id_post )
@@ -244,7 +244,20 @@ class Post_Model extends Model
 		return $this->montarObjeto( $result[0] );
 	}
 
-	/** 
+	/**
+	 * Metodo obterPostBySlug
+	 */
+	public function obterPostBySlug( $slug )
+	{
+		$sql  = "select * ";
+		$sql .= "from post ";
+		$sql .= "where slug = :slug ";
+
+		$result = $this->db->select( $sql, array("slug" => $slug) );
+		return $this->montarObjeto( $result[0] );
+	}
+
+	/**
 	* Metodo listarPost
 	*/
 	public function listarPost()
@@ -254,7 +267,7 @@ class Post_Model extends Model
 
 		if ( isset( $_POST["like"] ) )
 		{
-			$sql .= "where title like :id "; // Configurar o like com o campo necessario da tabela 
+			$sql .= "where title like :id "; // Configurar o like com o campo necessario da tabela
 			$sql .= "order by date desc ";
 			$result = $this->db->select( $sql, array("id" => "%{$_POST["like"]}%") );
 		}
@@ -266,25 +279,25 @@ class Post_Model extends Model
 
 		return $this->montarLista($result);
 	}
-	
+
 	/**
 	 * Lista os posts mais lidos
 	 * @param unknown $limit
 	 */
 	public function listTopPost( $limit = NULL )
-	{	
+	{
 		$sql  = "select ";
 		$sql .= "p.*, ";
 		$sql .= "(select count(d.id_post) from datalog as d where d.id_post = p.id_post) as total ";
 		$sql .= "from post as p ";
 		$sql .= "where p.status = 'PUBLISHED' ";
 		$sql .= "order by total desc ";
-		
+
 		if( $limit )
 			$sql .= "limit {$limit} ";
-		
+
 		$result = $this->db->select( $sql );
-	
+
 		return $this->montarLista($result);
 	}
 
@@ -298,16 +311,16 @@ class Post_Model extends Model
 		$sql .= "from post as p ";
 		$sql .= "where p.status = 'PUBLISHED' ";
 		$sql .= "order by p.date desc ";
-		
+
 		if( $limit )
 			$sql .= "limit {$limit} ";
-		
+
 		$result = $this->db->select( $sql );
-		
+
 		return $this->montarLista($result);
 	}
-	
-	
+
+
 	/**
 	 * Metodo listPostRelated
 	 * Lista os post relacionados com outro post
@@ -326,16 +339,16 @@ class Post_Model extends Model
 		$sql .= "and p.id_post != {$id_post} ";
 		$sql .= "group by p.id_post ";
 		$sql .= "order by p.views desc ";
-		
+
 		if( $limit )
 			$sql .= "limit {$limit} ";
-		
+
 		$result = $this->db->select( $sql );
-		
+
 		return $this->montarLista($result);
 	}
-	
-	/** 
+
+	/**
 	* Metodo montarLista
 	*/
 	private function montarLista( $result )
@@ -354,7 +367,7 @@ class Post_Model extends Model
 		return $objs;
 	}
 
-	/** 
+	/**
 	* Metodo montarObjeto
 	*/
 	private function montarObjeto( $row )

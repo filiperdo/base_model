@@ -1,18 +1,18 @@
-<?php 
+<?php
 
-/** 
+/**
  * Classe Category
- * @author __ 
+ * @author __
  *
  * Data: 13/09/2016
- */ 
+ */
 
 include_once 'typecategory_model.php';
 
 class Category_Model extends Model
 {
-	/** 
-	* Atributos Private 
+	/**
+	* Atributos Private
 	*/
 	private $id_category;
 	private $name;
@@ -27,7 +27,7 @@ class Category_Model extends Model
 		$this->typecategory = new Typecategory_Model();
 	}
 
-	/** 
+	/**
 	* Metodos set's
 	*/
 	public function setId_category( $id_category )
@@ -45,7 +45,7 @@ class Category_Model extends Model
 		$this->typecategory = $typecategory;
 	}
 
-	/** 
+	/**
 	* Metodos get's
 	*/
 	public function getId_category()
@@ -64,7 +64,7 @@ class Category_Model extends Model
 	}
 
 
-	/** 
+	/**
 	* Metodo create
 	*/
 	public function create( $data )
@@ -80,7 +80,7 @@ class Category_Model extends Model
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo edit
 	*/
 	public function edit( $data, $id )
@@ -96,14 +96,14 @@ class Category_Model extends Model
 		return $update;
 	}
 
-	/** 
+	/**
 	* Metodo delete
 	*/
 	public function delete( $id )
 	{
 		$this->db->beginTransaction();
 
-		if( !$delete = $this->db->delete("category", "id_category = {$id} ") ){ 
+		if( !$delete = $this->db->delete("category", "id_category = {$id} ") ){
 			$this->db->rollBack();
 			return false;
 		}
@@ -112,7 +112,7 @@ class Category_Model extends Model
 		return $delete;
 	}
 
-	/** 
+	/**
 	* Metodo obterCategory
 	*/
 	public function obterCategory( $id_category )
@@ -125,7 +125,7 @@ class Category_Model extends Model
 		return $this->montarObjeto( $result[0] );
 	}
 
-	/** 
+	/**
 	* Metodo listarCategory
 	*/
 	public function listarCategory()
@@ -135,7 +135,7 @@ class Category_Model extends Model
 
 		if ( isset( $_POST["like"] ) )
 		{
-			$sql .= "where name like :name "; // Configurar o like com o campo necessario da tabela 
+			$sql .= "where name like :name "; // Configurar o like com o campo necessario da tabela
 			$result = $this->db->select( $sql, array("name" => "%{$_POST["like"]}%") );
 		}
 		else
@@ -143,7 +143,7 @@ class Category_Model extends Model
 
 		return $this->montarLista($result);
 	}
-	
+
 	/**
 	 * Lista as categorias vinculadas a um projetos
 	 * @param unknown $id_post
@@ -155,13 +155,30 @@ class Category_Model extends Model
 		$sql .= "inner join post_category as pc ";
 		$sql .= "on pc.id_category = c.id_category ";
 		$sql .= "where pc.id_post = :id_p ";
-	
+
 		$result = $this->db->select( $sql, array("id_p" => $id_post ) );
+
+		return $this->montarLista($result);
+	}
+
+	/**
+	 * Lista as categorias vinculadas a um projetos
+	 * @param unknown $id_post
+	 */
+	public function listCategoryByProduct( $id_product )
+	{
+		$sql  = "select c.* ";
+		$sql .= "from category as c ";
+		$sql .= "inner join product_category as pc ";
+		$sql .= "on pc.id_category = c.id_category ";
+		$sql .= "where pc.id_product = :id_p ";
+
+		$result = $this->db->select( $sql, array("id_p" => $id_product ) );
 	
 		return $this->montarLista($result);
 	}
 
-	/** 
+	/**
 	* Metodo montarLista
 	*/
 	private function montarLista( $result )
@@ -180,7 +197,7 @@ class Category_Model extends Model
 		return $objs;
 	}
 
-	/** 
+	/**
 	* Metodo montarObjeto
 	*/
 	private function montarObjeto( $row )

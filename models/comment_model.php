@@ -1,19 +1,19 @@
-<?php 
+<?php
 
-/** 
+/**
  * Classe Comment
- * @author __ 
+ * @author __
  *
  * Data: 13/09/2016
- */ 
+ */
 
 include_once 'user_model.php';
 include_once 'post_model.php';
 
 class Comment_Model extends Model
 {
-	/** 
-	* Atributos Private 
+	/**
+	* Atributos Private
 	*/
 	private $id_comment;
 	private $content;
@@ -32,7 +32,7 @@ class Comment_Model extends Model
 		$this->post = new Post_Model();
 	}
 
-	/** 
+	/**
 	* Metodos set's
 	*/
 	public function setId_comment( $id_comment )
@@ -60,7 +60,7 @@ class Comment_Model extends Model
 		$this->post = $post;
 	}
 
-	/** 
+	/**
 	* Metodos get's
 	*/
 	public function getId_comment()
@@ -89,7 +89,7 @@ class Comment_Model extends Model
 	}
 
 
-	/** 
+	/**
 	* Metodo create
 	*/
 	public function create( $data )
@@ -105,7 +105,7 @@ class Comment_Model extends Model
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo edit
 	*/
 	public function edit( $data, $id )
@@ -121,14 +121,14 @@ class Comment_Model extends Model
 		return $update;
 	}
 
-	/** 
+	/**
 	* Metodo delete
 	*/
 	public function delete( $id )
 	{
 		$this->db->beginTransaction();
 
-		if( !$delete = $this->db->delete("comment", "id_comment = {$id} ") ){ 
+		if( !$delete = $this->db->delete("comment", "id_comment = {$id} ") ){
 			$this->db->rollBack();
 			return false;
 		}
@@ -137,7 +137,7 @@ class Comment_Model extends Model
 		return $delete;
 	}
 
-	/** 
+	/**
 	* Metodo obterComment
 	*/
 	public function obterComment( $id_comment )
@@ -150,7 +150,7 @@ class Comment_Model extends Model
 		return $this->montarObjeto( $result[0] );
 	}
 
-	/** 
+	/**
 	* Metodo listarComment
 	*/
 	public function listarComment()
@@ -160,7 +160,7 @@ class Comment_Model extends Model
 
 		if ( isset( $_POST["like"] ) )
 		{
-			$sql .= "where id_comment like :id "; // Configurar o like com o campo necessario da tabela 
+			$sql .= "where id_comment like :id "; // Configurar o like com o campo necessario da tabela
 			$result = $this->db->select( $sql, array("id" => "%{$_POST["like"]}%") );
 		}
 		else
@@ -169,7 +169,54 @@ class Comment_Model extends Model
 		return $this->montarLista($result);
 	}
 
-	/** 
+	/**
+	 * Lista os comentarios por tipo
+	 * Verifica se o tipo eh um post ou um projeto
+	 * @param unknown $type
+	 * @param unknown $id
+	 * @param unknown $limit
+	 */
+	public function listCommentByType( $type, $id, $limit = NULL )
+	{
+		$sql  = "select * ";
+		$sql .= "from comment as c ";
+
+		if( $type == 'post' )
+			$sql .= "where c.id_post = :id ";
+		else
+			$sql .= "where c.id_project = :id ";
+
+		$sql .= "order by c.date desc ";
+
+		if( $limit )
+			$sql .= "limit {$limit} ";
+
+		$result = $this->db->select( $sql, array("id" => $id) );
+
+		return $this->montarLista($result);
+	}
+
+	/**
+	 * Retorna o total de comentarios por post ou projeto
+	 * @param unknown $type
+	 * @param unknown $id
+	 * @return unknown
+	 */
+	public function getTotalComment( $type, $id )
+	{
+		$sql  = "select count(c.id_comment) as total ";
+		$sql .= "from comment as c ";
+
+		if( $type == 'post' )
+			$sql .= "where c.id_post = :id ";
+		else
+			$sql .= "where c.id_project = :id ";
+
+		$result = $this->db->select( $sql, array("id" => $id) );
+		return $result[0]['total'];
+	}
+
+	/**
 	* Metodo montarLista
 	*/
 	private function montarLista( $result )
@@ -188,7 +235,7 @@ class Comment_Model extends Model
 		return $objs;
 	}
 
-	/** 
+	/**
 	* Metodo montarObjeto
 	*/
 	private function montarObjeto( $row )

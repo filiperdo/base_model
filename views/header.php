@@ -1,5 +1,5 @@
 <?php Session::init(); ?>
-<?php include_once 'menu.php';?>   
+<?php include_once 'menu.php';?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +9,16 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <?php
+   // add este codigo na home do site tbm
+    if (isset($this->meta_facebook))
+    {
+        foreach ($this->meta_facebook as $key => $valor)
+        {
+            echo '<meta property="og:'.$key.'" content="'.$valor.'" />';
+        }
+    }
+    ?>
   <title><?=(isset($this->title)) ? $this->title : SYSTEM_NAME; ?> </title>
 
   <!-- Bootstrap core CSS -->
@@ -28,16 +37,23 @@
   <script src="<?php echo URL?>public/js/nprogress.js"></script>
   <script src="<?php echo URL?>public/js/khas.js"></script>
 
-	<?php 
-    if (isset($this->js)) 
+	<?php
+    if (isset($this->js))
     {
         foreach ($this->js as $js)
         {
             echo '<script type="text/javascript" src="'.URL.'public/js/'.$js.'"></script>';
         }
     }
+    if (isset($this->css))
+    {
+    	foreach ($this->css as $css)
+    	{
+    		echo '<link href="'. URL .'public/css/'. $css .'" rel="stylesheet">';
+    	}
+    }
     ?>
-    
+
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
         <![endif]-->
@@ -62,7 +78,7 @@
         <div class="left_col scroll-view">
 
           <div class="navbar nav_title" style="border: 0;">
-            <a href="index.html" class="site_title"><i class="fa fa-gears"></i> <span>KHAS</span></a>
+            <a href="index.html" class="site_title"><i class="fa fa-gears"></i> <span><?php echo SYSTEM_NAME; ?></span></a>
           </div>
           <div class="clearfix"></div>
 
@@ -84,20 +100,20 @@
           <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
             <div class="menu_section">
-              
+
               <ul class="nav side-menu">
-                
+
                 <?php foreach( $menu as $key => $item ) { ?>
 			        <li>
 			        	<a href="<?php echo URL . $key; ?>">
-			        		<i class="<?php echo $item['icon']?>"></i> <?php echo $item['label']; ?> 
+			        		<i class="<?php echo $item['icon']?>"></i> <?php echo $item['label']; ?>
 			        	</a>
 			        </li>
 		        <?php } ?>
 
               </ul>
             </div>
-            
+
           </div>
           <!-- /sidebar menu -->
 
@@ -132,7 +148,7 @@
             <ul class="nav navbar-nav navbar-right">
               <li class="">
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src="<?php echo URL?>public/img/img.jpg" alt=""><?php echo Session::get('user_name'); ?> 
+                  <img src="<?php echo URL?>public/img/img.jpg" alt=""><?php echo Session::get('user_name'); ?>
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -235,5 +251,3 @@
 
       <!-- page content -->
       <div class="right_col" role="main">
-      
-		

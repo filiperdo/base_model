@@ -39,7 +39,7 @@ class Mvc
         $this->pathRoot = '_files/mvc/';
         
         if( !is_dir( $this->pathRoot ) )
-            mkdir( $this->pathRoot, 0777);
+            mkdir( $this->pathRoot, 0777, true);
         
         $sql = 'show tables from ' . $this->dbname;
         $result = $this->pdo->query($sql);
@@ -96,7 +96,7 @@ class Mvc
     private function createFile( $path, $fileName, $content )
     {
         if( !is_dir( $path ) )
-            mkdir( $path, 0777);
+            mkdir( $path, 0777, true);
         
         $fp = fopen( $path . $fileName, 'w' );
         $fw = fwrite( $fp, $content );

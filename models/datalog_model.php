@@ -1,27 +1,27 @@
-<?php 
+<?php
 
-/** 
+/**
  * Classe Datalog
- * @author __ 
+ * @author __
  *
- * Data: 13/09/2016
- */ 
+ * Data: 01/06/2016
+ */
 
-include_once 'user_model.php';
 include_once 'post_model.php';
-include_once 'product_model.php';
+include_once 'user_model.php';
 
 class Datalog_Model extends Model
 {
-	/** 
-	* Atributos Private 
+	/**
+	* Atributos Private
 	*/
 	private $id_datalog;
 	private $date;
 	private $user;
 	private $post;
-	private $product;
+
 	private $ip;
+	private $source;
 
 	public function __construct()
 	{
@@ -31,11 +31,12 @@ class Datalog_Model extends Model
 		$this->date = '';
 		$this->user = new User_Model();
 		$this->post = new Post_Model();
-		$this->product = new Product_Model();
+
 		$this->ip = '';
+		$this->source = '';
 	}
 
-	/** 
+	/**
 	* Metodos set's
 	*/
 	public function setId_datalog( $id_datalog )
@@ -58,17 +59,18 @@ class Datalog_Model extends Model
 		$this->post = $post;
 	}
 
-	public function setProduct( Product_Model $product )
-	{
-		$this->product = $product;
-	}
 
 	public function setIp( $ip )
 	{
 		$this->ip = $ip;
 	}
 
-	/** 
+	public function setSource( $source )
+	{
+		$this->source = $source;
+	}
+
+	/**
 	* Metodos get's
 	*/
 	public function getId_datalog()
@@ -91,24 +93,40 @@ class Datalog_Model extends Model
 		return $this->post;
 	}
 
-	public function getProduct()
-	{
-		return $this->product;
-	}
-
 	public function getIp()
 	{
 		return $this->ip;
 	}
 
+	public function getSource()
+	{
+		return $this->source;
+	}
 
-	/** 
+	/**
 	* Metodo create
 	*/
 	public function create( $data )
 	{
 		$this->db->beginTransaction();
 
+		// Retira estas chaves do array, foram utilizadas para
+		// efetuar a pesquisa de um data log especifico antes de gravar
+		unset( $data['id'] );
+		unset( $data['date'] );
+		unset( $data['type'] );
+
+		// Configura a origem do acesso
+		$data['source'] = '';//$_SERVER['HTTP_REFERER'];
+
+		// Verifica se o user esta logado para gravar o id
+		Session::init();
+		if( Session::get('userid') )
+		{
+			$data['id_user'] = Session::get('userid');
+		}
+
+		//var_dump( $data );
 		if( !$id = $this->db->insert( "datalog", $data ) ){
 			$this->db->rollBack();
 			return false;
@@ -118,7 +136,7 @@ class Datalog_Model extends Model
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo edit
 	*/
 	public function edit( $data, $id )
@@ -134,14 +152,14 @@ class Datalog_Model extends Model
 		return $update;
 	}
 
-	/** 
+	/**
 	* Metodo delete
 	*/
 	public function delete( $id )
 	{
 		$this->db->beginTransaction();
 
-		if( !$delete = $this->db->delete("datalog", "id_datalog = {$id} ") ){ 
+		if( !$delete = $this->db->delete("datalog", "id_datalog = {$id} ") ){
 			$this->db->rollBack();
 			return false;
 		}
@@ -150,7 +168,7 @@ class Datalog_Model extends Model
 		return $delete;
 	}
 
-	/** 
+	/**
 	* Metodo obterDatalog
 	*/
 	public function obterDatalog( $id_datalog )
@@ -163,7 +181,43 @@ class Datalog_Model extends Model
 		return $this->montarObjeto( $result[0] );
 	}
 
-	/** 
+	/**
+	 * Verifica se ja existe um log expecifico
+	 * @param unknown $dados
+	 */
+	public function getDataLog( $dados ) // $id, $ip, $data, $type
+	{
+		$sql  = "select * ";
+		$sql .= "from datalog as d ";
+		$sql .= 'where ip = "'. $dados['ip'] . '" ';
+		$sql .= "and date(d.date) = '" . date('Y-m-d') . "' ";
+		$sql .= "and {$dados['type']} = '{$dados['id']}' ";
+
+		$result = $this->db->select( $sql );
+
+		if( !empty( $result ) )
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Conta quantas visualizações exitem
+	 * para um determinado item
+	 * @param unknown $id
+	 * @param unknown $type
+	 */
+	public function countDataLog( $id, $type )
+	{
+		$sql  = "select count(id_datalog) as total ";
+		$sql .= "from datalog ";
+		$sql .= "where id_{$type} = :id ";
+
+		$result = $this->db->select( $sql, array("id" => $id) );
+		return $result[0]['total'];
+	}
+
+	/**
 	* Metodo listarDatalog
 	*/
 	public function listarDatalog()
@@ -173,7 +227,7 @@ class Datalog_Model extends Model
 
 		if ( isset( $_POST["like"] ) )
 		{
-			$sql .= "where id_datalog like :id "; // Configurar o like com o campo necessario da tabela 
+			$sql .= "where id_datalog like :id "; // Configurar o like com o campo necessario da tabela
 			$result = $this->db->select( $sql, array("id" => "%{$_POST["like"]}%") );
 		}
 		else
@@ -182,7 +236,7 @@ class Datalog_Model extends Model
 		return $this->montarLista($result);
 	}
 
-	/** 
+	/**
 	* Metodo montarLista
 	*/
 	private function montarLista( $result )
@@ -201,7 +255,7 @@ class Datalog_Model extends Model
 		return $objs;
 	}
 
-	/** 
+	/**
 	* Metodo montarObjeto
 	*/
 	private function montarObjeto( $row )
@@ -217,10 +271,8 @@ class Datalog_Model extends Model
 		$objPost->obterPost( $row["id_post"] );
 		$this->setPost( $objPost );
 
-		$objProduct = new Product_Model();
-		$objProduct->obterProduct( $row["id_product"] );
-		$this->setProduct( $objProduct );
 		$this->setIp( $row["ip"] );
+		$this->setSource( $row['source'] );
 
 		return $this;
 	}

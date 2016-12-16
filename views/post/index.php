@@ -49,7 +49,7 @@
 	<?php foreach( $this->listarPost as $post ) { ?>
 	<tr>
  		<td><?php echo $post->getId_post(); ?></td>
-		<td><span class="text-uppercase"><a href="<?php echo URL . 'blog/post/' . $post->getId_post(); ?>" target="_blank"><?php echo $post->getTitle(); ?></a></span></td>
+		<td><span class="text-uppercase"><a href="<?php echo URL .'index/blog/'. $post->getSlug(); ?>" target="_blank"><?php echo $post->getTitle(); ?></a></span></td>
 		<td><?php echo Data::formatDateShort( $post->getDate() ); ?></td>
 		<td><?php echo $post->getViews(); ?></td>
 		<td><?php echo $post->getStatus() == 'DRAFT' ? '<span class="label label-default">Rascunho</span>' : '<span class="label label-success">Publicado</span>'; ?></td>
@@ -71,6 +71,6 @@ $(function() {
 	$(".delete").click(function(e) {
 		var c = confirm("Deseja realmente deletar este registro?");
 		if (c == false) return false;
-	}); 
+	});
  });
 </script>

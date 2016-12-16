@@ -30,7 +30,8 @@ $(document).ready(function(){
 										<li>{{fi-progressBar}}</li>\
 									</ul>\
 									<ul class="list-inline pull-right">\
-										<li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+										<li><button class="bt-copy btn btn-info btn-xs" data-clipboard-action="copy" data-clipboard-text=""><i class="glyphicon glyphicon-link"></i></button>\
+										<a class="bt-copy btn btn-danger btn-xs"><i class="icon-jfi-trash jFiler-item-trash-action"></i></a></li>\
 									</ul>\
 								</div>\
 							</div>\

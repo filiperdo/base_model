@@ -22,7 +22,7 @@
 
     if($data['isComplete']){
         $files = $data['data'];
-
+		
         echo json_encode($files['metas'][0]['name']);
     }
 
