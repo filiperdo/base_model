@@ -4,8 +4,8 @@
 if ($_SERVER['HTTP_HOST'] == "localhost")
 	define('URL', 'http://localhost/khas/');
 else
-	define('URL', '');
-	
+	define('URL', 'http://www.nepali.com.br/khas/');
+
 define('LIBS', 'libs/');
 
 define('DB_TYPE', 'mysql');
