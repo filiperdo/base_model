@@ -145,6 +145,20 @@ class Category_Model extends Model
 	}
 
 	/**
+	* Metodo listarCategoryByType
+	*/
+	public function listarCategoryByType( $type )
+	{
+		$sql  = "select * ";
+		$sql .= "from category as c ";
+		$sql .= "where c.id_typecategory = :id ";
+
+		$result = $this->db->select( $sql, array("id" => $type ) );
+
+		return $this->montarLista($result);
+	}
+
+	/**
 	 * Lista as categorias vinculadas a um projetos
 	 * @param unknown $id_post
 	 */
@@ -174,7 +188,7 @@ class Category_Model extends Model
 		$sql .= "where pc.id_product = :id_p ";
 
 		$result = $this->db->select( $sql, array("id_p" => $id_product ) );
-	
+
 		return $this->montarLista($result);
 	}
 

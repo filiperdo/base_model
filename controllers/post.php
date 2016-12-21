@@ -37,7 +37,7 @@ class Post extends Controller {
 
 		require_once 'models/category_model.php';
 		$objCategoria = new Category_Model();
-		$this->view->listCategory = $objCategoria->listarCategory();
+		$this->view->listCategory = $objCategoria->listarCategoryByType(1);
 
 		$this->view->path = '';
 
@@ -101,6 +101,7 @@ class Post extends Controller {
 			'id_user'		=> Session::get('userid'),
 			//'author'		=> $_POST['author'],
 			//'source'		=> $_POST['source']
+			'tags'			=> $_POST['tags']
 		);
 
 		if( !$id_post = $this->model->create( $data ) )
@@ -161,6 +162,7 @@ class Post extends Controller {
 			'mainpicture'	=> str_replace('../', '', $_POST['mainpicture']),
 			//'author'		=> $_POST['author'],
 			//'source'		=> $_POST['source']
+			'tags'			=> $_POST['tags']
 		);
 
 		if( !$this->model->edit( $data, $id ) )

@@ -37,13 +37,11 @@
 <table id="datatable-responsive" class="table table-striped" cellspacing="0" width="100%">
 	<thead>
 	<tr>
-		<th>Id_galery </th>
+		<th>Id</th>
 		<th>Name </th>
 		<th>Slug </th>
-		<th>Path </th>
-		<th>Mainpicture </th>
-		<th>Date </th>
-		<th>Id_user </th>
+		<th>Data </th>
+		<th>User </th>
 		<th></th>
 	</tr>
 	</thead>
@@ -53,10 +51,8 @@
  		<td><?php echo $galery->getId_galery(); ?></td>
 		<td><?php echo $galery->getName(); ?></td>
 		<td><?php echo $galery->getSlug(); ?></td>
-		<td><?php echo $galery->getPath(); ?></td>
-		<td><?php echo $galery->getMainpicture(); ?></td>
-		<td><?php echo $galery->getDate(); ?></td>
-		<td><?php echo ""; ?></td>
+		<td><?php echo Data::formataData($galery->getDate()); ?></td>
+		<td><?php echo $galery->getUser()->getName(); ?></td>
 		<td align="right">
 			<a href="<?php echo URL;?>galery/form/<?php echo $galery->getId_galery();?>" class="btn btn-dark btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>
 			<a href="<?php echo URL;?>galery/delete/<?php echo $galery->getId_galery();?>" class="delete btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>
@@ -75,6 +71,6 @@ $(function() {
 	$(".delete").click(function(e) {
 		var c = confirm("Deseja realmente deletar este registro?");
 		if (c == false) return false;
-	}); 
+	});
  });
 </script>

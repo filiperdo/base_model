@@ -39,14 +39,11 @@
 	<tr>
 		<th>Id </th>
 		<th>Name </th>
-
 		<th>Data </th>
 		<th>User </th>
 		<th>Status </th>
-		<th>Path </th>
-		<th>Mainpicture </th>
 		<th>Slug </th>
-		<th>Price </th>
+		<th>Preço </th>
 
 		<th></th>
 	</tr>
@@ -59,10 +56,9 @@
 		<td><?php echo Data::formataDataRetiraHora($product->getData()); ?></td>
 		<td><?php echo $product->getUser()->getName(); ?></td>
 		<td><?php echo $product->getStatus(); ?></td>
-		<td><?php echo $product->getPath(); ?></td>
-		<td><?php echo $product->getMainpicture(); ?></td>
+
 		<td><?php echo $product->getSlug(); ?></td>
-		<td><?php echo $product->getPrice(); ?></td>
+		<td><?php echo 'R$ ' . Data::formataMoeda($product->getPrice()); ?></td>
 
 		<td align="right">
 			<a href="<?php echo URL;?>product/form/<?php echo $product->getId_product();?>" class="btn btn-dark btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>

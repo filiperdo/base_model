@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class User extends Controller {
 
@@ -7,7 +7,7 @@ class User extends Controller {
 		//Auth::handleLogin();
 	}
 
-	/** 
+	/**
 	* Metodo index
 	*/
 	public function index()
@@ -20,7 +20,7 @@ class User extends Controller {
 		$this->view->render( "footer" );
 	}
 
-	/** 
+	/**
 	* Metodo editForm
 	*/
 	public function form( $id = NULL )
@@ -29,7 +29,7 @@ class User extends Controller {
 		$this->view->action = "create";
 		$this->view->obj = $this->model;
 
-		if( $id ) 
+		if( $id )
 		{
 			$this->view->title = "Editar User";
 			$this->view->action = "edit/".$id;
@@ -45,22 +45,22 @@ class User extends Controller {
 		$this->view->render( "footer" );
 	}
 
-	/** 
+	/**
 	* Metodo create
 	*/
 	public function create()
 	{
 		$data = array(
-			'name' => $_POST["name"], 
-			'login' => $_POST["login"], 
-			'password' => $_POST["password"], 
-			'email' => $_POST["email"], 
-			'numlogin' => $_POST["numlogin"], 
-			'date' => $_POST["date"], 
-			'id_typeuser' => $_POST["id_typeuser"], 
-			'lastlogin' => $_POST["lastlogin"], 
-			'status' => $_POST["status"], 
-			'path' => $_POST["path"], 
+			'name' 			=> $_POST["name"],
+			'login' 		=> $_POST["login"],
+			'password' 		=> $_POST["password"],
+			'email' 		=> $_POST["email"],
+			//'numlogin' 		=> $_POST["numlogin"],
+			//'date' 			=> $_POST["date"],
+			//'id_typeuser' 	=> $_POST["id_typeuser"],
+			//'lastlogin' 	=> $_POST["lastlogin"],
+			//'status' 		=> $_POST["status"],
+			//'path' 			=> $_POST["path"],
 		);
 
 		$this->model->create( $data ) ? $msg = base64_encode( "OPERACAO_SUCESSO" ) : $msg = base64_encode( "OPERACAO_ERRO" );
@@ -68,22 +68,22 @@ class User extends Controller {
 		header("location: " . URL . "user?st=".$msg);
 	}
 
-	/** 
+	/**
 	* Metodo edit
 	*/
 	public function edit( $id )
 	{
 		$data = array(
-			'name' => $_POST["name"], 
-			'login' => $_POST["login"], 
-			'password' => $_POST["password"], 
-			'email' => $_POST["email"], 
-			'numlogin' => $_POST["numlogin"], 
-			'date' => $_POST["date"], 
-			'id_typeuser' => $_POST["id_typeuser"], 
-			'lastlogin' => $_POST["lastlogin"], 
-			'status' => $_POST["status"], 
-			'path' => $_POST["path"], 
+			'name' 			=> $_POST["name"],
+			'login' 		=> $_POST["login"],
+			'password' 		=> $_POST["password"],
+			'email' 		=> $_POST["email"],
+			//'numlogin' 		=> $_POST["numlogin"],
+			//'date' 			=> $_POST["date"],
+			//'id_typeuser' 	=> $_POST["id_typeuser"],
+			//'lastlogin' 	=> $_POST["lastlogin"],
+			//'status' 		=> $_POST["status"],
+			//'path' 			=> $_POST["path"], 
 		);
 
 		$this->model->edit( $data, $id ) ? $msg = base64_encode( "OPERACAO_SUCESSO" ) : $msg = base64_encode( "OPERACAO_ERRO" );
@@ -91,7 +91,7 @@ class User extends Controller {
 		header("location: " . URL . "user?st=".$msg);
 	}
 
-	/** 
+	/**
 	* Metodo delete
 	*/
 	public function delete( $id )

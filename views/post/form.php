@@ -59,15 +59,24 @@
 					</div>
 				</div>
 
-				<div class="checkbox">
-					<label class="col-sm-2 control-label">Categorias</label>
-					<div class="col-sm-10 ">
-						<?php foreach( $this->listCategory as $category ) { ?>
-						<label style="margin: 10px 20px 20px 0">
-							<input type="checkbox" value="<?php echo $category->getId_category(); ?>" name="categoria[]" <?php if( in_array($category->getId_category(), $this->array_category ) ){?>checked="checked"<?php } ?>>
-							<?php echo $category->getName(); ?>
-						</label>
-						<?php } ?>
+				<div class="form-group">
+					<label class="control-label col-md-2">Tags</label>
+					<div class="col-md-10 col-sm-10 col-xs-12">
+					<input type="text" class="tags form-control" name="tags" value="<?=$this->obj->getTags()?>" /><br>Exemplo de tags: (social, anúncios, vendas)
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="checkbox">
+						<label class="col-sm-2 control-label">Categorias</label>
+						<div class="col-sm-10 ">
+							<?php foreach( $this->listCategory as $category ) { ?>
+							<label style="margin: 10px 20px 20px 0">
+								<input type="checkbox" value="<?php echo $category->getId_category(); ?>" name="categoria[]" <?php if( in_array($category->getId_category(), $this->array_category ) ){?>checked="checked"<?php } ?>>
+								<?php echo $category->getName(); ?>
+							</label>
+							<?php } ?>
+						</div>
 					</div>
 				</div>
 
@@ -147,10 +156,7 @@
 
 	$(document).ready(function(){
 
-		if( window.location.hostname == 'localhost' )
-		{
-			var URL = 'http://localhost/khas/';
-		}
+		var URL = '<?=URL?>';
 
 		$(".delete").click(function(){
 

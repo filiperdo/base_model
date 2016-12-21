@@ -27,6 +27,7 @@ class Post_Model extends Model
 	private $slug;
 	private $author;
 	private $source;
+	private $tags;
 
 	public function __construct()
 	{
@@ -45,6 +46,7 @@ class Post_Model extends Model
 		$this->slug = '';
 		$this->author = '';
 		$this->source = '';
+		$this->tags = '';
 	}
 
 	/**
@@ -105,14 +107,19 @@ class Post_Model extends Model
 		$this->slug = $slug;
 	}
 
-	private function setAuthor( $author )
+	public function setAuthor( $author )
 	{
 		$this->author = $author;
 	}
 
-	private function setSource( $source )
+	public function setSource( $source )
 	{
 		$this->source = $source;
+	}
+
+	public function setTags( $tags )
+	{
+		$this->tags = $tags;
 	}
 
 	/**
@@ -181,6 +188,11 @@ class Post_Model extends Model
 	public function getSource()
 	{
 		return $this->source;
+	}
+
+	public function getTags()
+	{
+		return $this->tags;
 	}
 
 	/**
@@ -389,6 +401,7 @@ class Post_Model extends Model
 		$this->setSlug( $row['slug'] );
 		$this->setAuthor( $row['author'] );
 		$this->setSource( $row['source'] );
+		$this->setTags( $row['tags'] );
 
 		return $this;
 	}

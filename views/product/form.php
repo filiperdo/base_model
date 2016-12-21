@@ -45,9 +45,9 @@
 </div>
 
 <div class="form-group">
-	<label for="price" class="col-md-2 col-sm-2 col-xs-12 control-label">Valor</label>
+	<label for="price" class="col-md-2 col-sm-2 col-xs-12 control-label">Preço</label>
 	<div class="col-md-9 col-sm-9 col-xs-12">
-		<input type="text" name="price" id="price"  class="form-control col-md-7 col-xs-12" required="required" value="<?=$this->obj->getPrice()?>" />
+		<input type="text" name="price" id="price"  class="form-control col-md-7 col-xs-12" required="required" value="<?=Data::formataMoeda($this->obj->getPrice())?>" />
 	</div>
 </div>
 
@@ -72,6 +72,16 @@
 	</div>
 </div>
 
+<div class="form-group">
+<label for="status" class="col-md-2 col-sm-2 col-xs-12 control-label">Status</label>
+<div class="col-sm-9 col-sm-9 col-xs-12">
+	<select name="status" class="form-control">
+		<option value="DRAFT" <?php if( $this->obj->getStatus() == 'ACTIVE' ){?>selected="selected"<?php }?>>Ativo</option>
+		<option value="PUBLISHED" <?php if( $this->obj->getStatus() == 'INACTIVE' ){?>selected="selected"<?php }?>>Inativo</option>
+	</select>
+</div>
+</div>
+
 <div class="checkbox">
 	<label class="col-sm-2 control-label">Categorias</label>
 	<div class="col-sm-10 ">
@@ -83,6 +93,7 @@
 		<?php } ?>
 	</div>
 </div>
+
 <!--
 <div class="form-group">
 	<label for="id_provider" class="col-md-2 col-sm-2 col-xs-12 control-label">Id_provider</label>
@@ -164,7 +175,7 @@
 		</div>
 		</div>
 
-	</div><!-- col-md-4 -->
+	</div><!-- col-md-6 -->
 
 </div>
 
@@ -179,7 +190,8 @@
 	var clipboard = new Clipboard('.bt-copy');
 
 	$(document).ready(function(){
-		var URL = 'http://localhost/khas/';
+
+		var URL = '<?=URL?>';
 
 		$(".delete").click(function(){
 

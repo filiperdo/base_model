@@ -41,6 +41,7 @@
 		<th>Title </th>
 		<th>Date </th>
 		<th>Views </th>
+		<th>user </th>
 		<th>Status </th>
 		<th></th>
 	</tr>
@@ -52,6 +53,7 @@
 		<td><span class="text-uppercase"><a href="<?php echo URL .'index/blog/'. $post->getSlug(); ?>" target="_blank"><?php echo $post->getTitle(); ?></a></span></td>
 		<td><?php echo Data::formatDateShort( $post->getDate() ); ?></td>
 		<td><?php echo $post->getViews(); ?></td>
+		<td><?php echo $post->getUser()->getName(); ?></td>
 		<td><?php echo $post->getStatus() == 'DRAFT' ? '<span class="label label-default">Rascunho</span>' : '<span class="label label-success">Publicado</span>'; ?></td>
 		<td align="right">
 			<a href="<?php echo URL;?>post/form/<?php echo $post->getId_post();?>" class="btn btn-dark btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>

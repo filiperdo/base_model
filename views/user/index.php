@@ -37,17 +37,14 @@
 <table id="datatable-responsive" class="table table-striped" cellspacing="0" width="100%">
 	<thead>
 	<tr>
-		<th>Id_user </th>
-		<th>Name </th>
+		<th>Id</th>
+		<th>Nome </th>
 		<th>Login </th>
 		<th>Password </th>
 		<th>Email </th>
-		<th>Numlogin </th>
-		<th>Date </th>
-		<th>Id_typeuser </th>
+		<th>Tipo </th>
 		<th>Lastlogin </th>
 		<th>Status </th>
-		<th>Path </th>
 		<th></th>
 	</tr>
 	</thead>
@@ -59,12 +56,10 @@
 		<td><?php echo $user->getLogin(); ?></td>
 		<td><?php echo $user->getPassword(); ?></td>
 		<td><?php echo $user->getEmail(); ?></td>
-		<td><?php echo $user->getNumlogin(); ?></td>
-		<td><?php echo $user->getDate(); ?></td>
-		<td><?php echo ""; ?></td>
-		<td><?php echo $user->getLastlogin(); ?></td>
+		<td><?php echo $user->getTypeuser()->getName(); ?></td>
+		<td><?php echo Data::formataDataHora($user->getLastlogin()); ?></td>
 		<td><?php echo $user->getStatus(); ?></td>
-		<td><?php echo $user->getPath(); ?></td>
+
 		<td align="right">
 			<a href="<?php echo URL;?>user/form/<?php echo $user->getId_user();?>" class="btn btn-dark btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>
 			<a href="<?php echo URL;?>user/delete/<?php echo $user->getId_user();?>" class="delete btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>
@@ -83,6 +78,6 @@ $(function() {
 	$(".delete").click(function(e) {
 		var c = confirm("Deseja realmente deletar este registro?");
 		if (c == false) return false;
-	}); 
+	});
  });
 </script>

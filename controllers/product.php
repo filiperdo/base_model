@@ -12,7 +12,7 @@ class Product extends Controller {
 	*/
 	public function index()
 	{
-		$this->view->title = "Product";
+		$this->view->title = "Produto";
 		$this->view->listarProduct = $this->model->listarProduct();
 
 		$this->view->render( "header" );
@@ -37,7 +37,7 @@ class Product extends Controller {
 
 		require_once 'models/category_model.php';
 		$objCategoria = new Category_Model();
-		$this->view->listCategory = $objCategoria->listarCategory();
+		$this->view->listCategory = $objCategoria->listarCategoryByType(2); // 2 = product
 
 		if( $id == NULL )
 		{
@@ -118,7 +118,7 @@ class Product extends Controller {
 			foreach( $_POST['categoria'] as $id_categoria )
 			{
 				$data_category = array(
-					'id_post'		=> $id_product,
+					'id_product'	=> $id_product,
 					'id_category'	=> $id_categoria
 				);
 
@@ -167,7 +167,7 @@ class Product extends Controller {
 			'id_manufacturer' 	=> 1, //$_POST["id_manufacturer"]
 		);
 
-	
+
 
 		if( !$this->model->edit( $data, $id ) )
 		{
@@ -187,7 +187,7 @@ class Product extends Controller {
 			foreach( $_POST['categoria'] as $id_categoria )
 			{
 				$data_category = array(
-					'id_post'		=> $id,
+					'id_product'	=> $id,
 					'id_category'	=> $id_categoria
 				);
 

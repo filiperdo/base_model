@@ -37,9 +37,9 @@
 <table id="datatable-responsive" class="table table-striped" cellspacing="0" width="100%">
 	<thead>
 	<tr>
-		<th>Id_category </th>
+		<th>Id </th>
 		<th>Name </th>
-		<th>Id_typecategory </th>
+		<th>Tipo </th>
 		<th></th>
 	</tr>
 	</thead>
@@ -67,6 +67,6 @@ $(function() {
 	$(".delete").click(function(e) {
 		var c = confirm("Deseja realmente deletar este registro?");
 		if (c == false) return false;
-	}); 
+	});
  });
 </script>

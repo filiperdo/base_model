@@ -1,7 +1,7 @@
 <!-- footer content -->
         <footer>
           <div class="copyright-info">
-            <p class="pull-right">KHAS - Bootstrap Admin Template by <a href="http://www.nepali.com.br" target="_blank">Nepali</a>  
+            <p class="pull-right">KHAS Admin - by <a href="http://www.nepali.com.br" target="_blank">Nepali</a>  
             </p>
           </div>
           <div class="clearfix"></div>
